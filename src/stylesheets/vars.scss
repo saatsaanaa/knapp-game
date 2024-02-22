@@ -1,0 +1,15 @@
+:root {
+  --white: white;
+  --black: black;
+}
+
+h1 {
+  font-size: 68px;
+}
+
+.A_Title {
+  font-weight: 500;
+  &.medium {
+    font-size: 32px;
+  }
+}

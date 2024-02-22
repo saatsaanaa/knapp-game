@@ -1,0 +1,19 @@
+.O_Header {
+  display: grid;
+  /*grid-template-columns: repeat(3, minmax(0, 1fr));*/
+  grid-template-columns: 1fr 3fr 1fr;
+  align-items: center;
+  width: 1392px;
+  padding: 14px 56px;
+
+  > .LinkGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 80px;
+  }
+
+  > button {
+    justify-self: right;
+  }
+}

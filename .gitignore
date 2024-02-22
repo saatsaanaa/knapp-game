@@ -1,0 +1,5 @@
+.DS_Store
+yarn-error.log
+/node_modules
+/dev_build
+/src/javascript/firebaseConfig.js
