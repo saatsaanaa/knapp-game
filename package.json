@@ -5,12 +5,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https:///github.com/ZakharDay/static-site-boilerplate"
+    "url": "git+https://github.com/saatsaanaa/knapp-game.git"
   },
   "bugs": {
-    "url": "https://github.com/ZakharDay/static-site-boilerplate/issues"
+    "url": "https://github.com/saatsaanaa/knapp-game.git"
   },
-  "homepage": "https://github.com/ZakharDay/static-site-boilerplate#readme",
+  "homepage": "https://github.com/saatsaanaa/knapp-game.git#readme",
   "scripts": {
     "start": "webpack serve --open --config webpack.dev.js",
     "watch": "webpack --config webpack.dev.js",
