@@ -1,59 +1,141 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import Cookies from 'js-cookie'
-import queryString from 'query-string'
-import { ref, onValue, set, update } from 'firebase/database'
-import { db } from './firebaseConfig.js'
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  ref,
+  onValue,
+  onChildAdded,
+  update,
+  query,
+  equalTo,
+  orderByChild,
+  limitToLast,
+} from "firebase/database";
+import { db } from "./firebaseConfig.js";
+import Cookies from "js-cookie";
+import queryString from "query-string";
+
+import { initLobby } from "../store/lobbySlice.js";
+import { initUser } from "../store/userSlice.js";
+
+import { processAction } from "./processAction.jsx";
+
+import { createQueue } from "../store/gameSlice.js";
 
 /*Компоненты*/
-import PlayersList from './lobby-components/PlayersList.jsx'
-import GameStatusBar from './lobby-components/GameStatusBar.jsx'
+import PlayersList from "./lobby-components/PlayersList/PlayersList.jsx";
+import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
+import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
+import { sendAction } from "./sendAction.jsx";
+import { getFromAirTable } from "./airtableConfig.js";
 
-import { initLobby } from '../store/lobbySlice.js'
-import { initUser } from '../store/userSlice.js'
-import GameProcess from './lobby-components/GameProcess.jsx'
-
+/**
+ * ЛОББИ
+ * */
 const Lobby = () => {
-  const dispatch = useDispatch()
+  const lobby = useSelector((state) => state.lobby.lobby);
+  const user = useSelector((state) => state.user.user);
+  const dispatch = useDispatch();
 
-  Cookies.get('id') !== undefined
-    ? console.log(Cookies.get('id'))
-    : console.log(Cookies.set('id', Date.now()))
+  /** Получаем юзера из кук */
+  const userId = Cookies.get("id");
+  const lobbyId = queryString.parse(location.search);
 
-  const lobbyId = queryString.parse(location.search)
-  console.log(queryString.parse(location.search))
+  /*getFromAirTable();*/
 
-  //Обновления лобби
+  /**
+   *
+   * Получаем и обновляем информацию о лобби
+   * */
   useEffect(() => {
-    const resp = ref(db, 'lobbies/' + lobbyId.id)
-    return onValue(resp, (snapshot) => {
-      const data = snapshot.val()
-      if (snapshot.exists()) {
-        dispatch(initLobby({ ...data, lobbyId: lobbyId.id }))
-        data.players.map((player) => {
-          Cookies.get('id') === player.id && dispatch(initUser(player))
-        })
-      }
-    })
-  }, [])
+    console.log("Я пошел за данными");
+    return onValue(ref(db, "lobbies/" + lobbyId.id), (data) => {
+      if (data.exists()) {
+        dispatch(initLobby({ ...data.val(), lobbyId: lobbyId.id }));
 
-  const lobby = useSelector((state) => state.lobby.lobby)
-  const user = useSelector((state) => state.user.user)
+        //Определяем юзера
+        const userData = data.val().players.filter((player) => {
+          return userId === player.id;
+        });
+
+        const isCurrentPlayer = () => {
+          if (
+            data.val().stage === "game" &&
+            Object.hasOwn(data.val(), "game")
+          ) {
+            return userData[0].id === data.val().game.currentPlayerId;
+          } else return false;
+        };
+
+        if (userData.length !== 0) {
+          dispatch(
+            initUser({
+              id: userData[0].id,
+              name: userData[0].name,
+              isHost: userData[0].role === "host",
+              isCurrentPlayer: isCurrentPlayer(),
+            })
+          );
+        } else dispatch(initUser({ id: userId }));
+
+        //
+      } else console.log("Такого лобби не существует");
+    });
+  }, []);
+
+  /**
+   *
+   * Проверяем юзера
+   * */
+  if (Object.keys(lobby).length !== 0) {
+    Object.keys(user).length === 1 && sendAction("JOIN_LOBBY", lobby, user);
+  }
+
+  /**
+   *
+   *   Отслеживание экшенов
+   * */
+  useEffect(() => {
+    if (Object.keys(lobby).length !== 0 && user.isHost) {
+      return onChildAdded(
+        query(
+          ref(db, "actions"),
+          orderByChild("gameId"),
+          equalTo(lobby.lobbyId),
+          limitToLast(1)
+        ),
+        (data) => {
+          const action = data.val();
+          const actionKey = data.key;
+          !action.processed
+            ? processAction(action, actionKey, lobby, user)
+            : "Экшен уже обработан";
+        }
+      );
+    }
+  });
 
   return (
     <>
       <div className="S_Lobby">
-        <div className="W_LobbyInfo">
-          <PlayersList />
-        </div>
-        <div className="GameBoard">
-          <GameStatusBar />
-          <GameProcess />
-        </div>
+        {Object.keys(lobby).length !== 0 ? (
+          <>
+            <div className="W_LobbyInfo">
+              <PlayersList />
+              {lobby.lobbyId.slice(-4)}
+            </div>
+            <div className="GameBoard">
+              <GameStatusBar />
+              <GameProcess />
+            </div>
+          </>
+        ) : (
+          "Лобби загружается"
+        )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Lobby
+export default Lobby;

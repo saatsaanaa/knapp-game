@@ -14,7 +14,7 @@ body {
   align-items: center;
   scrollbar-gutter: stable;
   overflow-x: hidden;
-  font-family: 'Hauora', Helvetica, Arial, sans-serif;
+  font-family: "Hauora", Helvetica, Arial, sans-serif;
   font-weight: 400;
 }
 
@@ -23,23 +23,39 @@ a {
 }
 
 p {
-  font-size: 16px;
   line-height: 1.2;
+
+  &.A_Title {
+    font-weight: 500;
+
+    &.large {
+      font-size: 32px;
+    }
+
+    &.medium {
+      font-size: 24px;
+    }
+
+    &.small {
+      font-size: 20px;
+    }
+  }
+
+  &.A_Paragraph {
+    &.large {
+      font-size: 18px;
+    }
+    &.medium {
+      font-size: 16px;
+      font-weight: 500;
+    }
+    &.small {
+      font-size: 16px;
+    }
+  }
+
   &.blue {
     color: var(--blue-600);
-  }
-}
-
-.A_Title {
-  font-weight: 500;
-  line-height: 120%;
-
-  &.medium {
-    font-size: 32px;
-  }
-
-  &.small {
-    font-size: 24px;
   }
 }
 

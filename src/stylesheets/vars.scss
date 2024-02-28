@@ -1,15 +1,17 @@
 :root {
   --white: white;
   --black: black;
-}
 
-h1 {
-  font-size: 68px;
-}
+  --green-100: #d1fae9;
+  --green-200: #afffdb;
+  --green-400: #33d4a8;
+  --green-500: #11d0a3;
+  --green-600: #049777;
+  --green-700: #037962;
 
-.A_Title {
-  font-weight: 500;
-  &.medium {
-    font-size: 32px;
-  }
+  --blue-100: #dce5ff;
+  --blue-400: #707eff;
+  --blue-500: #4f53ff;
+  --blue-600: #2a1efb;
+  --blue-700: #3224de;
 }

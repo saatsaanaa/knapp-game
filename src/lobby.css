@@ -1,10 +1,10 @@
-@import 'stylesheets/reset.scss';
-@import 'stylesheets/vars.scss';
-@import 'stylesheets/fonts.scss';
-@import 'stylesheets/basics.scss';
+@import "stylesheets/reset.scss";
+@import "stylesheets/vars.scss";
+@import "stylesheets/fonts.scss";
+@import "stylesheets/basics.scss";
 
 /*Компоненты*/
-@import 'stylesheets/O_Header.scss';
-@import 'stylesheets/A_Button.scss';
+@import "stylesheets/O_Header.scss";
+@import "stylesheets/A_Button.scss";
 
-@import 'stylesheets/lobby.scss';
+@import "stylesheets/lobby.scss";

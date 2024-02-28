@@ -1,19 +1,25 @@
-import './lobby.css'
+import "./lobby.css";
 
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-import { Provider } from 'react-redux'
-import store from './store/index'
+import { Provider } from "react-redux";
+import store from "./store/index";
 
-import Lobby from './javascript/Lobby.jsx'
+import Cookies from "js-cookie";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('reactComponentRoot')
-  const root = createRoot(container)
+import Lobby from "./javascript/Lobby.jsx";
+
+Cookies.get("id") !== undefined
+  ? console.log(Cookies.get("id"))
+  : console.log(Cookies.set("id", Date.now()));
+
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("reactComponentRoot");
+  const root = createRoot(container);
   root.render(
     <Provider store={store}>
       <Lobby />
     </Provider>
-  )
-})
+  );
+});
