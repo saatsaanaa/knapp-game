@@ -9,6 +9,7 @@ import store from "./store/index";
 import Cookies from "js-cookie";
 
 import Lobby from "./javascript/Lobby.jsx";
+import Header from "./javascript/Header.jsx";
 
 Cookies.get("id") !== undefined
   ? console.log(Cookies.get("id"))
@@ -19,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = createRoot(container);
   root.render(
     <Provider store={store}>
+      <div class="O_Header">
+        <Header />
+      </div>
+
       <Lobby />
     </Provider>
   );

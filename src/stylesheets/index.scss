@@ -1,4 +1,23 @@
 body.index {
-  /*background: violet;*/
-  background: wheat;
+  .Cover {
+    width: 1392px;
+    height: calc(100vh - 78px - 24px);
+    background-color: #bfcdff;
+    border-radius: 24px;
+    padding: 24px 56px;
+    display: grid;
+    grid-template-columns: 275fr 1501fr;
+    grid-gap: 32px;
+    gap: 32px;
+  }
+
+  img {
+    margin-top: 16px;
+  }
 }
+
+/*<div>This is a landing page</div>
+    <a href="./pages/lobby.html">Открыть лобби</a>
+    <p>Я что-то</p>
+    <a href="./pages/card-decks.html">Посмотреть колоды</a>
+    <div class="Cover"></div>*/

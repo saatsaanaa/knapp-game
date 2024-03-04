@@ -11,6 +11,20 @@ const GameStatusBar = () => {
     return lobby.stage === "game" && Object.hasOwn(lobby, "game");
   };
 
+  const isApprovedBySmbd = (lobby) => {
+    if (Object.hasOwn(lobby, "game")) {
+      if (Object.hasOwn(lobby.game, "approves")) {
+        if (
+          Object.values(lobby.game.approves).filter((approve) => {
+            return user.id === approve.id;
+          }).length !== 0
+        ) {
+          return true;
+        }
+      }
+    }
+  };
+
   if (lobby.stage === "wait") {
     return (
       <div className="GameStatusBar">
@@ -96,7 +110,7 @@ const GameStatusBar = () => {
             </div>
             <button
               className="A_Button green"
-              disabled={lobby.game.status === "pick"}
+              disabled={lobby.game.status === "pick" || isApprovedBySmbd(lobby)}
               onClick={() => sendAction("APPROVE_TURN", lobby, user)}
             >
               Игрок сходил
@@ -129,125 +143,25 @@ const GameStatusBar = () => {
         );
       }
     }
+  } else if (lobby.stage === "end") {
+    if (user.isHost) {
+      return (
+        <div className="GameStatusBar">
+          <div className="StatusLabel">
+            <p className="A_Title large">Колода закончилась</p>
+          </div>
+        </div>
+      );
+    }
   } else {
     return (
-      <div className="gameStatusBar">
+      <div className="GameStatusBar">
         <div className="StatusLabel">
           <p className="A_Title large">Состояние лобби не определено</p>
         </div>
       </div>
     );
   }
-
-  return (
-    <div className="GameStatusBar">
-      {lobby.stage === "wait" ? (
-        <>
-          <div className="StatusLabel">
-            <p className="A_Title large">Ожидание игроков...</p>
-          </div>
-          {user.isHost && (
-            <button
-              className="A_Button green"
-              disabled={lobby.players.length < 2}
-              onClick={() => sendAction("START_GAME", lobby, user)}
-            >
-              Начать игру
-            </button>
-          )}
-        </>
-      ) : isLobbyStageGame(lobby) ? (
-        user.isCurrentPlayer ? (
-          <>
-            <div className="StatusLabel">
-              <p className="A_Title large">Ваш ход</p>
-              {lobby.game.status === "pick" ? (
-                <p className="A_Paragraph large">
-                  Выберите правду или действие
-                </p>
-              ) : (
-                lobby.game.status === "true" && (
-                  <p className="A_Paragraph large">
-                    Если вам не нравится вопрос, вы можете сменить его на
-                    действие
-                  </p>
-                )
-              )}
-            </div>
-          </>
-        ) : (
-          <>
-            <div className="StatusLabel">
-              <p className="A_Title large">
-                Ход игрока{" "}
-                <span>
-                  {
-                    lobby.players.filter((player) => {
-                      return player.id === lobby.game.currentPlayerId;
-                    })[0].name
-                  }
-                </span>
-              </p>
-            </div>
-            <button
-              className="A_Button green"
-              disabled={lobby.game.status === "pick"}
-              onClick={() => sendAction("APPROVE_TURN", lobby, user)}
-            >
-              Игрок сходил
-            </button>
-          </>
-        )
-      ) : (
-        <p>lobby.stage не определен</p>
-      )}
-      {/*<StatusLabel />*/}
-
-      {/*lobby.stage === "wait" ? (
-        user.isHost && (
-          <button
-            className="A_Button green"
-            disabled={lobby.players.length < 2}
-            onClick={() => sendAction("START_GAME", lobby, user)}
-          >
-            Начать игру
-          </button>
-        )
-      ) : isLobbyStageGame(lobby) ? (
-        !user.isCurrentPlayer && (
-          <button
-            className="A_Button green"
-            disabled={lobby.game.status === "pick"}
-            onClick={() => sendAction("APPROVE_TURN", lobby, user)}
-          >
-            Игрок сходил
-          </button>
-        )
-      ) : (
-        <p>StatusLabel сломался</p>
-      )*/}
-      {/*lobby.stage === "wait" ? (
-        <>
-          <div className="StatusLabel">
-            <p className="A_Title large">Ожидание игроков...</p>
-          </div>
-          {user.isHost && (
-            <button
-              className="A_Button green"
-              disabled={lobby.players.length < 2}
-              onClick={() => sendAction("START_GAME", lobby, user)}
-            >
-              Начать игру
-            </button>
-          )}
-        </>
-      ) : lobby.stage === "game" && user.isCurrentPlayer ? (
-        <MyTurn />
-      ) : (
-        <Turn />
-      )*/}
-    </div>
-  );
 };
 
 export default GameStatusBar;

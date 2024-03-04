@@ -28,7 +28,6 @@ import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
 import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
 import { sendAction } from "./sendAction.jsx";
-import { getFromAirTable } from "./airtableConfig.js";
 
 /**
  * ЛОББИ
@@ -37,12 +36,9 @@ const Lobby = () => {
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
-
   /** Получаем юзера из кук */
   const userId = Cookies.get("id");
   const lobbyId = queryString.parse(location.search);
-
-  /*getFromAirTable();*/
 
   /**
    *
@@ -123,7 +119,8 @@ const Lobby = () => {
           <>
             <div className="W_LobbyInfo">
               <PlayersList />
-              {lobby.lobbyId.slice(-4)}
+              {/*lobby.lobbyId.slice(-4)*/}
+              <p className="A_Paragraph large">Колода “Познакомимся?”</p>
             </div>
             <div className="GameBoard">
               <GameStatusBar />

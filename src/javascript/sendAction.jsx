@@ -47,12 +47,17 @@ export const sendAction = (actionType, lobby, user) => {
      * action PASS_TURN
      */
   } else if (actionType === "PASS_TURN") {
-    const nextCurrentPlayerIndex =
-      lobby.players.findIndex((player) => {
-        return player.id === lobby.game.currentPlayerId;
-      }) + 1;
+    const nextCurrentPlayerIndex = () => {
+      let index =
+        lobby.players.findIndex((player) => {
+          return player.id === lobby.game.currentPlayerId;
+        }) + 1;
+      if (lobby.players.length <= index) {
+        return 0;
+      } else return index;
+    };
     actionData = {
-      nextCurrentPlayerId: lobby.players[nextCurrentPlayerIndex].id,
+      nextCurrentPlayerId: lobby.players[nextCurrentPlayerIndex()].id,
     };
     /**
      *

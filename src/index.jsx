@@ -1,12 +1,12 @@
-import './index.css'
+import "./index.css";
 
-import React from 'react'
-import { createRoot } from 'react-dom/client'
+import React from "react";
+import { createRoot } from "react-dom/client";
 
-import Button from './javascript/create-game-components/Button.jsx'
+import Header from "./javascript/Header.jsx";
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('reactCreateButtonRoot')
-  const root = createRoot(container)
-  root.render(<Button />)
-})
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("reactCreateHeaderRoot");
+  const root = createRoot(container);
+  root.render(<Header />);
+});

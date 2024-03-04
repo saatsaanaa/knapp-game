@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 import { ref, update } from "firebase/database";
 import { db } from "../firebaseConfig";
 import { sendAction } from "../sendAction.jsx";
+import { getFromAirTable } from "../airtableConfig.js";
+import { Link } from "lucide-react";
 
 const GameProcess = () => {
   const lobby = useSelector((state) => state.lobby.lobby);
@@ -12,57 +14,111 @@ const GameProcess = () => {
 
   /*Проверки*/
 
-  const isLobbyStageGame = (lobby) => {
-    return lobby.stage === "game" && Object.hasOwn(lobby, "game");
-  };
-
   const isStatus = (whatNeed) => {
     return lobby.game.status === whatNeed;
   };
 
-  const isCurrentPlayer = () => {
-    return user.id === lobby.game.currentPlayerId;
-  };
-
-  /*Компоненты*/
-
-  const Default = () => {
+  if (lobby.stage === "wait") {
     return (
-      <p className="A_Title">
-        Пригласите других игроков, используя ссылку приглашение
-      </p>
+      <div className="GameProcess">
+        <p className="A_Title medium">
+          Пригласите других игроков, используя{" "}
+          <a>
+            ссылку приглашение <Link />
+          </a>
+        </p>
+      </div>
     );
-  };
-
-  return (
-    <div className="GameProcess">
-      {lobby.stage === "wait" ? (
-        <Default />
-      ) : isLobbyStageGame(lobby) ? (
-        <>
+  } else if (lobby.stage === "game" && Object.hasOwn(lobby, "game")) {
+    /**
+     *
+     *
+     * Если ЮЗЕР ХОДИТ     */
+    if (user.id === lobby.game.currentPlayerId) {
+      return (
+        <div className="GameProcess">
           {(isStatus("pick") || isStatus("true")) && (
             <div
-              className={isStatus("true") ? "Card choosed" : "Card"}
+              className={isStatus("true") ? "Card choosed" : "Card clickable"}
               onClick={() => sendAction("PICK_TRUE", lobby, user)}
             >
-              {isStatus("true") ? "Какой ваш любимый цвет?" : "Правда"}
+              {isStatus("true") ? lobby.game.currentPair[1] : "Правда"}
             </div>
           )}
 
           {(isStatus("pick") || isStatus("dare")) && (
             <div
-              className={isStatus("dare") ? "Card choosed" : "Card"}
+              className={isStatus("dare") ? "Card choosed" : "Card clickable"}
               onClick={() => sendAction("PICK_DARE", lobby, user)}
             >
-              {isStatus("dare") ? "Покажите ваш любимый мем" : "Действие"}
+              {isStatus("dare") ? lobby.game.currentPair[2] : "Действие"}
             </div>
           )}
-        </>
-      ) : (
-        "Все сломалось"
-      )}
-    </div>
-  );
+
+          {Object.hasOwn(lobby.game, "approves") && (
+            <div className="Approves">
+              {Object.values(lobby.game.approves).map((approve) => {
+                return (
+                  <div>
+                    Игрок {approve.name} <br /> подтвердил ход
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+      /**
+       *
+       *
+       * Если ЮЗЕР НЕ ХОДИТ     */
+    } else {
+      return (
+        <div className="GameProcess">
+          {(isStatus("pick") || isStatus("true")) && (
+            <div
+              className={
+                isStatus("true") ? "Card choosed disabled" : "Card disabled"
+              }
+            >
+              {isStatus("true") ? lobby.game.currentPair[1] : "Правда"}
+            </div>
+          )}
+
+          {(isStatus("pick") || isStatus("dare")) && (
+            <div
+              className={
+                isStatus("dare") ? "Card choosed disabled" : "Card disabled"
+              }
+            >
+              {isStatus("dare") ? lobby.game.currentPair[2] : "Действие"}
+            </div>
+          )}
+          {Object.hasOwn(lobby.game, "approves") && (
+            <div className="Approves">
+              {Object.values(lobby.game.approves).map((approve) => {
+                return (
+                  <div>
+                    Игрок {approve.name} <br /> подтвердил ход
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      );
+    }
+  } else if (lobby.stage === "end") {
+    return (
+      <div className="GameProcess">
+        <p className="A_Paragraph large">
+          Сейчас только одна колода. Но появятся и другие, следите за новостями!
+        </p>
+      </div>
+    );
+  } else {
+    return <p>Все сломалось</p>;
+  }
 };
 
 export default GameProcess;

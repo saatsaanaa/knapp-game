@@ -26,7 +26,7 @@ const Button = () => {
             deckId: 0,
             players: [
               {
-                name: "Nastya",
+                name: "Настя",
                 id: Cookies.get("id"),
                 role: "host",
               },

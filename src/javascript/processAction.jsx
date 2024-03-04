@@ -1,8 +1,7 @@
 import { ref, push, child, update, get } from "firebase/database";
 import { db } from "./firebaseConfig.js";
 import { sendAction } from "./sendAction.jsx";
-
-import { TestCardDecks } from "./TestCardDeck.js";
+import { getCardPair } from "./airtableConfig.js";
 
 export const processAction = (action, actionKey, lobby, user) => {
   console.log(action);
@@ -15,11 +14,24 @@ export const processAction = (action, actionKey, lobby, user) => {
       }).length === 0
     ) {
       console.log("Такого юзера не существует");
+      const names = [
+        "Вика",
+        "Стас",
+        "Сева",
+        "Алина",
+        "Маша",
+        "Саша",
+        "Женя",
+        "Влад",
+        "Егор",
+        "Даша",
+      ];
       update(
         ref(db, `lobbies/${lobby.lobbyId}/players/${lobby.players.length}`),
         {
           id: action.actionData.id,
-          name: action.actionData.name,
+          name: names[Math.floor(Math.random() * names.length)],
+          /*name: action.actionData.name,*/
           role: "player",
         }
       );
@@ -30,11 +42,18 @@ export const processAction = (action, actionKey, lobby, user) => {
   } else if (action.actionType === "START_GAME") {
     console.log("Начинаем игру");
     if (lobby.stage === "wait") {
-      update(ref(db, `lobbies/${lobby.lobbyId}`), { stage: "game" });
-      update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
-        currentPlayerId: lobby.players[0].id,
-        status: "pick",
-        pairs: createCardsPairs(),
+      const pairs = createCardsPairs();
+
+      getCardPair(pairs[0][0], pairs[0][1]).then((cards) => {
+        console.log(cards);
+
+        update(ref(db, `lobbies/${lobby.lobbyId}`), { stage: "game" });
+        update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
+          currentPlayerId: lobby.players[0].id,
+          status: "pick",
+          currentPair: [0, cards.truth, cards.dare],
+          pairs: pairs,
+        });
       });
     } else console.log("Игра уже началась");
 
@@ -46,7 +65,7 @@ export const processAction = (action, actionKey, lobby, user) => {
       if (action.actionType.includes("TRUE")) {
         console.log("Выбрали правду");
         update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "true" });
-      } else if (actionType.includes("DARE")) {
+      } else if (action.actionType.includes("DARE")) {
         console.log("Выбрали действие");
         update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "dare" });
       }
@@ -96,29 +115,51 @@ export const processAction = (action, actionKey, lobby, user) => {
      * */
   } else if (action.actionType === "PASS_TURN") {
     if (lobby.game.status === "true" || "dare") {
+      //Если выбрана правда или выбрано действие
+      //Апдейтим статус
+      //Выбираем след. игрока
+      //Запоминаем, что выбирал предыдущий игрок
       update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
         status: "PASS_TURN",
         nextCurrentPlayerId: action.actionData.nextCurrentPlayerId,
         previousStatus: lobby.game.status,
       }).then(() => {
+        //Посде обновления включаем таймер
         console.log("Начинаю отсчет");
         setTimeout(
           (lobby) => {
+            //Забираем оправленные перед этим данные
             get(child(ref(db), `lobbies/${lobby.lobbyId}/game`)).then(
               (data) => {
                 if (data.exists()) {
-                  console.log(data.val());
-                  update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
-                    currentPlayerId: data.val().nextCurrentPlayerId,
-                    status: "pick",
-                    nextCurrentPlayerId: null,
-                    approves: null,
-                  });
+                  console.log(lobby.game);
+                  const nextCurrentPair = lobby.game.currentPair[0] + 1;
+                  console.log(nextCurrentPair);
+
+                  if (nextCurrentPair < 8) {
+                    getCardPair(
+                      lobby.game.pairs[nextCurrentPair][0],
+                      lobby.game.pairs[nextCurrentPair][1]
+                    ).then((cards) => {
+                      update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
+                        currentPlayerId: data.val().nextCurrentPlayerId,
+                        status: "pick",
+                        nextCurrentPlayerId: null,
+                        approves: null,
+                        currentPair: [nextCurrentPair, cards.truth, cards.dare],
+                      });
+                    });
+                  } else {
+                    update(ref(db, `lobbies/${lobby.lobbyId}`), {
+                      game: null,
+                      stage: "end",
+                    });
+                  }
                 }
               }
             );
           },
-          10000,
+          3000,
           lobby
         );
       });
@@ -156,49 +197,8 @@ export const createCardsPairs = () => {
 
   const pairs = [];
   for (let i = 0; i < 8; i++) {
-    pairs.push([truths[0], dares[0]]);
+    pairs.push([truths[i], dares[i]]);
   }
 
   return pairs;
 };
-
-// Если еще не аппрувили
-
-/*if (lobby.game.approves === undefined) {
-        update(
-          ref(db, `lobbies/${lobby.lobbyId}/game/approves/${newApproveKey}`),
-          {
-            id: action.playerId,
-            name: lobby.players.filter((player) => {
-              return player.id === action.playerId;
-            })[0].name,
-          }
-        );
-
-        //Если кто-то уже аппрувил
-      } else if (
-        Object.values(lobby.game.approves).filter((approve) => {
-          return approve.id === action.playerId;
-        }).length === 0
-      ) {
-        update(
-          ref(db, `lobbies/${lobby.lobbyId}/game/approves/${newApproveKey}`),
-          {
-            id: action.playerId,
-            name: lobby.players.filter((player) => {
-              return player.id === action.playerId;
-            })[0].name,
-          }
-        ).then(() => {
-          Object.values(lobby.game.approves).length === lobby.players.length - 1
-            ? sendAction("PASS_TURN", lobby, user)
-            : console.log("Еще ждем аппрувы");
-        });*/
-
-//Ответ подтвердили все
-/*if (
-        Object.hasOwn(lobby.game, "approves") &&
-        Object.values(lobby.game.approves).length === lobby.players.length - 1
-      ) {
-        sendAction("PASS_TURN", lobby, user);
-      } else console.log("Еще ждем аппрувы");*/
