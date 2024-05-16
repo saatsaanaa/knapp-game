@@ -2,6 +2,12 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  align-self: end;
+
+  background-color: #fff;
+  padding: 20px 16px 18px;
+  border-radius: 16px;
+  border: 2px solid #e4e4f6;
 
   .header {
     display: flex;
@@ -9,9 +15,12 @@
     margin-bottom: 4px;
   }
   .O_PlayerItem {
-    background-color: white;
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 8px 0;
+    border-bottom: 2px solid #e4e4f6;
+
+    &:last-of-type {
+      border: none;
+    }
 
     &.CurrentPlayer {
       background-color: var(--green-200);

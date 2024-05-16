@@ -1,21 +1,20 @@
 .A_Button {
-  padding: 16px 24px;
+  padding: 10px 18px;
   border: none;
-  border-radius: 12px;
+  border-radius: 10px;
   background-color: #11d0a3;
   color: white;
   cursor: pointer;
   font-size: 18px;
   font-weight: 400;
-  line-height: 100%;
+  line-height: 28px;
   max-width: fit-content;
   max-height: fit-content;
 
   &:disabled {
-    background-color: #D1FAE9;
-    color: #33D4A8;
+    background-color: #d1fae9;
+    color: #33d4a8;
     opacity: 0.5;
     cursor: default;
   }
 }
-

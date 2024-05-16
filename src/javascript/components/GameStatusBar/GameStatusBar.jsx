@@ -1,4 +1,7 @@
 import React from "react";
+
+import "./GameStatusBar.scss";
+
 import { useSelector } from "react-redux";
 
 import { sendAction } from "../../sendAction.jsx";

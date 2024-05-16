@@ -1,5 +1,6 @@
 import { ref, update, push, child } from "firebase/database";
 import { db } from "./firebaseConfig";
+import { joinLobby } from "./Actions/joinLobby";
 
 export const sendAction = (actionType, lobby, user) => {
   const newActionKey = push(child(ref(db), "actions")).key;
@@ -8,28 +9,10 @@ export const sendAction = (actionType, lobby, user) => {
 
   console.log(actionType);
 
-  /**
-   *
-   *
-   * Добавить игрока в лобби
-   */
   if (actionType === "JOIN_LOBBY") {
-    actionData = {
-      name: ("Player" + user.id).slice(0, 10),
-      id: user.id,
-    };
-    /**
-     *
-     *
-     * Начать игру
-     */
+    actionData = joinLobby(user.id);
   } else if (actionType === "START_GAME") {
     actionData = {};
-    /**
-     *
-     *
-     * Выбор правды или действия
-     */
   } else if (actionType.includes("PICK")) {
     if (user.id === lobby.game.currentPlayerId) {
       actionData = {};

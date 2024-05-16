@@ -3,7 +3,7 @@ import "./index.css";
 import React from "react";
 import { createRoot } from "react-dom/client";
 
-import Header from "./javascript/Header.jsx";
+import Header from "./javascript/components/Header/Header.jsx";
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("reactCreateHeaderRoot");

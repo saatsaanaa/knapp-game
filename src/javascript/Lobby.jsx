@@ -23,11 +23,12 @@ import { processAction } from "./processAction.jsx";
 import { createQueue } from "../store/gameSlice.js";
 
 /*Компоненты*/
-import PlayersList from "./lobby-components/PlayersList/PlayersList.jsx";
-import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
+import PlayersList from "./components/PlayersList/PlayersList.jsx";
+import GameStatusBar from "./components/GameStatusBar/GameStatusBar.jsx";
 import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
 import { sendAction } from "./sendAction.jsx";
+import Header from "./components/Header/Header.jsx";
 
 /**
  * ЛОББИ
@@ -36,9 +37,10 @@ const Lobby = () => {
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
+
   /** Получаем юзера из кук */
   const userId = Cookies.get("id");
-  const lobbyId = queryString.parse(location.search);
+  dispatch(initLobby(queryString.parse(location.search)));
 
   /**
    *
@@ -117,14 +119,17 @@ const Lobby = () => {
       <div className="S_Lobby">
         {Object.keys(lobby).length !== 0 ? (
           <>
-            <div className="W_LobbyInfo">
-              <PlayersList />
-              {/*lobby.lobbyId.slice(-4)*/}
-              <p className="A_Paragraph large">Колода “Познакомимся?”</p>
+            <div>
+              <div className="GameBoard">
+                <GameProcess />
+              </div>
+              <Header></Header>
             </div>
-            <div className="GameBoard">
+
+            <div>
+              <p className="A_Paragraph large">Колода “Познакомимся?”</p>
               <GameStatusBar />
-              <GameProcess />
+              <PlayersList />
             </div>
           </>
         ) : (
