@@ -37,14 +37,17 @@ const Lobby = () => {
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   /** Получаем юзера из кук */
-  const userId = Cookies.get("id");
-  const lobbyId = queryString.parse(location.search);
+  const userId = Cookies.get("id");  
+
+  useEffect(() => {
+    dispatch(initLobby(queryString.parse(location.search)));
+  }, [])
 
   /**
    *
    * Получаем и обновляем информацию о лобби
    * */
-  useEffect(() => {
+  /*useEffect(() => {
     console.log("Я пошел за данными");
     return onValue(ref(db, "lobbies/" + lobbyId.id), (data) => {
       if (data.exists()) {
@@ -78,13 +81,13 @@ const Lobby = () => {
         //
       } else console.log("Такого лобби не существует");
     });
-  }, []);
+  }, []);*/
 
   /**
    *
    * Проверяем юзера
    * */
-  if (Object.keys(lobby).length !== 0) {
+  /*if (Object.keys(lobby).length !== 0) {
     Object.keys(user).length === 1 && sendAction("JOIN_LOBBY", lobby, user);
   }
 
@@ -92,7 +95,7 @@ const Lobby = () => {
    *
    *   Отслеживание экшенов
    * */
-  useEffect(() => {
+  /*useEffect(() => {
     if (Object.keys(lobby).length !== 0 && user.isHost) {
       return onChildAdded(
         query(
@@ -110,21 +113,37 @@ const Lobby = () => {
         }
       );
     }
-  });
+  });*/
 
   return (
     <>
-      <div className="S_Lobby">
+      <div className="Lobby">
         {Object.keys(lobby).length !== 0 ? (
           <>
-            <div className="W_LobbyInfo">
-              <PlayersList />
-              {/*lobby.lobbyId.slice(-4)*/}
-              <p className="A_Paragraph large">Колода “Познакомимся?”</p>
+            <div className="GameBoard">kzkzkzk</div>
+            <div className="LobbyInfo">
+              <div className="Info">
+                <p>Lobby Id</p>
+                <p>Desk name</p>
+              </div>
+              <div className="GameStatus">
+                <p>Очень ждем всех участников ы апривет</p>
+                <p>Начать игру</p>
+              </div>
+              <div className="PlayersList">
+                <p>Участники</p>
+                <div>
+                  <p>Имя 1</p>
+                </div>
+                <div>
+                  <p>Имя 2</p>
+                </div>
+              </div>
             </div>
-            <div className="GameBoard">
-              <GameStatusBar />
-              <GameProcess />
+            <div className="Menu">
+              <p>LOGO</p>
+              <p>Правила</p>
+              <p>Кнопка</p>
             </div>
           </>
         ) : (
@@ -136,3 +155,12 @@ const Lobby = () => {
 };
 
 export default Lobby;
+
+/*<div className="W_LobbyInfo">
+<PlayersList />
+<p className="A_Paragraph large">Колода “Познакомимся?”</p>
+</div>
+<div className="GameBoard">
+<GameStatusBar />
+<GameProcess />
+</div>*/

@@ -2,18 +2,63 @@
   width: 100vw;
 }
 
-.S_Lobby {
+.Lobby {
   width: 100vw;
-  height: calc(100vh - 78px);
-  background-color: #bfcdff;
-  border-radius: 24px 24px 0 0;
-  padding: 24px 56px;
+  height: 100vh;
+  padding: 0 40px;
+  background-color: #F7F8FC;
+  
   display: grid;
-  grid-template-columns: 275fr 1501fr;
-  grid-gap: 32px;
-  gap: 32px;
+  grid-template-columns: 9fr 3fr;
+  grid-template-rows: 9fr auto;
+  column-gap: 40px;
 
-  .W_LobbyInfo {
+  .GameBoard{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .LobbyInfo{
+    position: relative;
+    grid-row: span 2;
+
+    display: flex;
+    flex-direction: column;
+    padding: 32px 0;
+
+    .Info {
+      margin-bottom: 24px;
+    }
+
+    .GameStatus {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 16px;
+      border-radius: 8px;
+      background-color: #ffffff;
+      border: 1px solid #E4E4F6;
+    }
+
+    .PlayersList {
+      position: absolute;
+      bottom: 32px;
+      width: 100%;
+
+      padding: 20px 16px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      border: 1px solid #E4E4F6;
+    }
+  }
+  .Menu{
+    padding: 24px 0 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /*.W_LobbyInfo {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -150,5 +195,5 @@
         }
       }
     }
-  }
+  }*/
 }

@@ -20,10 +20,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = createRoot(container);
   root.render(
     <Provider store={store}>
-      <div class="O_Header">
-        <Header />
-      </div>
-
       <Lobby />
     </Provider>
   );
