@@ -1,19 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice } from "@reduxjs/toolkit";
 
 const lobbySlice = createSlice({
-  name: 'lobby',
+  name: "lobby",
   initialState: {
-    lobby: {}
+    lobby: {},
   },
   reducers: {
     initLobby(state, action) {
-      state.lobby = action.payload
-      console.log('Создали лобби:')
-      console.log(state.lobby)
-    }
-  }
-})
+      state.lobby = action.payload;
+      console.log("Создали лобби:");
+      console.log(state.lobby);
+    },
+  },
+});
 
-export const { initLobby } = lobbySlice.actions
+export const { initLobby } = lobbySlice.actions;
 
-export default lobbySlice.reducer
+export default lobbySlice.reducer;

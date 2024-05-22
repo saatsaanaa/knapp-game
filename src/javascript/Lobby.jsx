@@ -28,20 +28,123 @@ import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
 import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
 import { sendAction } from "./sendAction.jsx";
+import Input from "./components/Input/Input.jsx";
+import isUserExisting from "./utilities/isUserExisting.jsx";
 
 /**
  * ЛОББИ
  * */
 const Lobby = () => {
+  const [modalWindow, setModalWindow] = useState({
+    show: false,
+    content: "Пусто",
+  });
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
   /** Получаем юзера из кук */
-  const userId = Cookies.get("id");  
+  const userId = Cookies.get("id");
+
+  const isLobbyLoaded = () => {
+    if (Object.keys(lobby).length !== 0) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
+  if (isLobbyLoaded()) {
+    console.log("Загрузили лобби");
+  }
 
   useEffect(() => {
-    dispatch(initLobby(queryString.parse(location.search)));
-  }, [])
+    console.log("Я пошел за данными");
+    return onValue(
+      ref(db, "lobbies/" + queryString.parse(location.search).id),
+      (data) => {
+        if (data.exists()) {
+          dispatch(
+            initLobby({
+              ...data.val(),
+              lobbyId: queryString.parse(location.search).id,
+            })
+          );
+
+          //ПРОВЕРЯЕМ
+          if (isUserExisting(data.val().players, userId))
+            {console.log("Вы есть в списке")}
+            else {
+              setModalWindow({
+                ...modalWindow,
+                show: true,
+                content: (
+                  <>
+                    <p className="A_Title large">Присоединиться к лобби</p>
+                  </>)
+            });
+          /*data.val().players.filter((player) => {
+            if (userId === player.id) {
+              console.log("Вы есть в списке");
+              const userData = data.val().players.filter((player) => {
+                return userId === player.id;
+              });
+
+              if (userData.length !== 0) {
+                dispatch(
+                  initUser({
+                    id: userData[0].id,
+                    name: userData[0].name,
+                    isHost: userData[0].role === "host",
+                    isCurrentPlayer: isCurrentPlayer(),
+                  })
+                );
+              }
+            } else {
+              setModalWindow({
+                ...modalWindow,
+                show: true,
+                content: (
+                  <>
+                    <p className="A_Title large">Присоединиться к лобби</p>
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        const data = new FormData(e.target);
+                        const formJson = Object.fromEntries(data.entries());
+                        console.log(formJson);
+                        sendAction(
+                          "JOIN_LOBBY",
+                          { lobbyId: queryString.parse(location.search).id },
+                          { id: userId, name: formJson.name }
+                        );
+                        setModalWindow({
+                          show: true,
+                          content: (
+                            <>
+                              <p className="A_Title medium">
+                                Добавляем вас в лобби
+                              </p>
+                            </>
+                          ),
+                        });
+                      }}
+                    >
+                      <p className="A_Paragraph large">Придумайте ник</p>
+                      <input name="name" size="9" required></input>
+
+                      <button className="A_Button" type="submit">
+                        Присоединиться
+                      </button>
+                    </form>
+                  </>
+                ),
+              });
+            }
+          });*/
+        }
+      }
+    );
+  }, []);
 
   /**
    *
@@ -95,7 +198,7 @@ const Lobby = () => {
    *
    *   Отслеживание экшенов
    * */
-  /*useEffect(() => {
+  useEffect(() => {
     if (Object.keys(lobby).length !== 0 && user.isHost) {
       return onChildAdded(
         query(
@@ -113,11 +216,19 @@ const Lobby = () => {
         }
       );
     }
-  });*/
+  });
 
   return (
     <>
       <div className="Lobby">
+        {modalWindow.show ? (
+          <div className="ModalWindow">
+            <div>{modalWindow.content}</div>
+          </div>
+        ) : (
+          ""
+        )}
+
         {Object.keys(lobby).length !== 0 ? (
           <>
             <div className="GameBoard">kzkzkzk</div>

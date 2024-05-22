@@ -14,8 +14,10 @@ export const sendAction = (actionType, lobby, user) => {
    * Добавить игрока в лобби
    */
   if (actionType === "JOIN_LOBBY") {
+    console.log(user);
+    console.log(lobby.lobbyId);
     actionData = {
-      name: ("Player" + user.id).slice(0, 10),
+      name: user.name,
       id: user.id,
     };
     /**
