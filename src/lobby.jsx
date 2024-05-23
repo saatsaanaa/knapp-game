@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 
 import Lobby from "./javascript/Lobby.jsx";
 import Header from "./javascript/Header.jsx";
+import LoadingLobby from "./javascript/utilities/LoadingLobby.jsx";
 
 Cookies.get("id") !== undefined
   ? console.log(Cookies.get("id"))
@@ -20,7 +21,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = createRoot(container);
   root.render(
     <Provider store={store}>
-      <Lobby />
+      <LoadingLobby>
+        <Lobby />
+      </LoadingLobby>
     </Provider>
   );
 });

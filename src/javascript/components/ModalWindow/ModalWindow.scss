@@ -1,0 +1,49 @@
+.ModalWindow {
+  z-index: 1;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgb(0 0 0 / 0.6);
+
+  display: grid;
+  gap: 40px;
+  grid-template-columns: repeat(12, 1fr);
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+
+  > div {
+    grid-column: 5 / span 4;
+
+    display: flex;
+    gap: 16px;
+    flex-direction: column;
+    background-color: white;
+    padding: 24px 28px;
+    border-radius: 8px;
+
+    button {
+      align-self: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .DeckContainer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+
+      .Deck {
+        border-radius: 4px;
+        border: 2px solid rgb(190, 190, 190);
+        padding: 16px;
+      }
+    }
+  }
+}

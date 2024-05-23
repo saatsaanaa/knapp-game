@@ -14,24 +14,11 @@ export const processAction = (action, actionKey, lobby, user) => {
       }).length === 0
     ) {
       console.log("Такого юзера не существует");
-      const names = [
-        "Вика",
-        "Стас",
-        "Сева",
-        "Алина",
-        "Маша",
-        "Саша",
-        "Женя",
-        "Влад",
-        "Егор",
-        "Даша",
-      ];
       update(
         ref(db, `lobbies/${lobby.lobbyId}/players/${lobby.players.length}`),
         {
           id: action.actionData.id,
-          name: names[Math.floor(Math.random() * names.length)],
-          /*name: action.actionData.name,*/
+          name: action.actionData.name,
           role: "player",
         }
       );
