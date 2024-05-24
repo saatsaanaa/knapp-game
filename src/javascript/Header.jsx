@@ -1,29 +1,10 @@
 import React, { useState } from "react";
 
-import Button from "./create-game-components/Button.jsx";
+import Button from "./components/Button/Button.jsx";
 import Logo from "../imgs/knapp-logo.svg";
 import ModalWindow from "./components/ModalWindow/ModalWindow.jsx";
-import { name } from "file-loader";
 
 const Header = () => {
-  /*const decksList = [
-    {
-      id: 1,
-      name: "Колода 1",
-      description: "Небольшое описание колоды, темы вопросов и тд.",
-    },
-    {
-      id: 2,
-      name: "Колода 1",
-      description: "Небольшое описание колоды, темы вопросов и тд.",
-    },
-    {
-      id: 3,
-      name: "Колода 3",
-      description: "Небольшое описание колоды, темы вопросов и тд.",
-    },
-  ];*/
-
   const [modalWindow, setModalWindow] = useState({
     show: false,
     content: "Пусто",
@@ -41,9 +22,9 @@ const Header = () => {
         <a href="/">О проекте</a>
       </div>
 
-      <Button />
-      <button
+      <Button
         onClick={() => {
+          console.log("Привет");
           setModalWindow({
             show: true,
             content: (
@@ -80,10 +61,7 @@ const Header = () => {
             ),
           });
         }}
-      >
-        {" "}
-        Начать игру
-      </button>
+      />
 
       {modalWindow.show && <ModalWindow>{modalWindow.content}</ModalWindow>}
     </>

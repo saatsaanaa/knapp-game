@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
-import "../../stylesheets/modal.scss";
 import Cookies from "js-cookie";
 
-import { db } from "../firebaseConfig";
+import { db } from "../../firebaseConfig";
 import { ref, get, child, push, update, onValue } from "firebase/database";
 
-const Button = () => {
+const Button = ({ onClick }) => {
   /*Проверяем наличие айди юзера*/
   Cookies.get("id") !== undefined
     ? console.log(Cookies.get("id"))
@@ -13,11 +12,17 @@ const Button = () => {
 
   return (
     <>
-      <button
-        className="A_Button"
-        onClick={() => {
-          /* Создаем новую комнату*/
-          const newLobbyKey = push(child(ref(db), "lobbies")).key;
+      <button className="A_Button" onClick={onClick}>
+        Начать игру
+      </button>
+    </>
+  );
+};
+
+export default Button;
+
+/* Создаем новую комнату*/
+/*const newLobbyKey = push(child(ref(db), "lobbies")).key;
           console.log(newLobbyKey);
 
           update(ref(db, `lobbies/${newLobbyKey}`), {
@@ -33,13 +38,4 @@ const Button = () => {
             ],
           }).then(() => {
             document.location.href = `./pages/lobby.html?id=${newLobbyKey}`;
-          });
-        }}
-      >
-        Начать игру
-      </button>
-    </>
-  );
-};
-
-export default Button;
+          });*/
