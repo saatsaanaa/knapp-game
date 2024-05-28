@@ -1,0 +1,141 @@
+@property --x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --c {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(102, 0, 255);
+}
+
+.GameBoard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:has(.Card) {
+    background: #f7f8fc;
+    background: radial-gradient(closest-side, var(--c) var(--x), transparent);
+  }
+
+  &:has(.Card.truth.active:hover) {
+    animation: radialBackgroundChange-1 0.4s;
+    animation-fill-mode: forwards;
+  }
+
+  &:has(.Card.dare.active:hover) {
+    animation: radialBackgroundChange-2 0.4s;
+    animation-fill-mode: forwards;
+  }
+
+  .Card {
+    color: rgba($color: #fff, $alpha: 0.5);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 16px;
+    width: 25vw;
+    height: 37.5vw;
+    max-width: 420px;
+    max-height: 630px;
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    border: 2px solid rgba($color: #fff, $alpha: 0.2);
+    backdrop-filter: blur(16px);
+
+    transition: all 0.4s ease-out;
+
+    .Body-1 {
+      text-align: center;
+      width: 80%;
+    }
+
+    &.truth {
+      transform: rotateZ(-15deg);
+
+      &.active {
+        cursor: pointer;
+        color: #fff;
+        background-color: rgba($color: #6600ff, $alpha: 0.4);
+        border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
+
+        &:hover {
+          background-color: rgba($color: #11d0a3, $alpha: 0.6);
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
+          transform: rotateZ(-10deg) scale(1.1);
+        }
+      }
+    }
+
+    &.dare {
+      transform: rotateZ(15deg);
+
+      &.active {
+        cursor: pointer;
+        color: #fff;
+        background-color: rgba($color: #6600ff, $alpha: 0.4);
+        border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
+
+        &:hover {
+          background-color: rgba($color: #df5c4a, $alpha: 0.6);
+          border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
+          transform: rotateZ(10deg) scale(1.1);
+        }
+      }
+    }
+
+    &.active {
+      cursor: pointer;
+      background-color: #6600ff;
+
+      &:hover {
+        z-index: 1;
+        background-color: #11d0a3;
+      }
+
+      &:first-child:hover {
+      }
+
+      &:last-child:hover {
+        transform: rotateZ(10deg) scale(1.1);
+      }
+    }
+  }
+}
+
+@keyframes radialBackgroundChange-1 {
+  0% {
+    --x: 0%;
+    --c: rgb(102, 0, 255);
+  }
+  100% {
+    --x: 20%;
+    --c: rgb(17, 208, 163);
+  }
+}
+
+@keyframes radialBackgroundChange-2 {
+  0% {
+    --x: 0%;
+    --c: rgb(102, 0, 255);
+  }
+  100% {
+    --x: 20%;
+    --c: rgb(223, 92, 74);
+  }
+}
+
+/*
+
+&.true {
+      
+    }
+
+    &.dare {
+      transform: rotateZ(15deg);
+    }
+    
+*/

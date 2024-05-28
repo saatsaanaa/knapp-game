@@ -25,6 +25,31 @@ a {
 p {
   line-height: 1.2;
 
+  &.Title-1 {
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  &.Title-2 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &.Headline {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  &.Body-1 {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  &.Body-2 {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
   &.A_Title {
     font-weight: 500;
 

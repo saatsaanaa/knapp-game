@@ -10,8 +10,10 @@ import { processAction } from "./processAction.jsx";
 
 import { createQueue } from "../store/gameSlice.js";
 
+/*Иконки */
+
 /*Компоненты*/
-import PlayersList from "./lobby-components/PlayersList/PlayersList.jsx";
+import PlayersList from "./components/PlayersList/PlayersList.jsx";
 import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
 import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
@@ -21,6 +23,9 @@ import isUserExisting from "./utilities/isUserExisting.jsx";
 import LoadingLobby from "./utilities/LoadingLobby.jsx";
 import isCurrentPlayer from "./utilities/isCurrentPlayer.jsx";
 import HostPixel from "./utilities/HostPixel.jsx";
+import GameStatus from "./components/GameStatus/GameStatus.jsx";
+import { Link } from "lucide-react";
+import GameBoard from "./components/GameBoard/GameBoard.jsx";
 
 /**
  * ЛОББИ
@@ -43,7 +48,7 @@ const Lobby = () => {
           ...lobby.players.filter((player) => {
             return player.id === userId;
           })[0],
-          isCurrentPlayer: isCurrentPlayer(lobby.stage),
+          isCurrentPlayer: isCurrentPlayer(lobby, userId),
         })
       );
     } else {
@@ -65,11 +70,7 @@ const Lobby = () => {
                 );
                 setModalWindow({
                   show: false,
-                  content: (
-                    <>
-                      <p className="A_Title medium">Добавляем вас в лобби</p>
-                    </>
-                  ),
+                  content: <>{location.reload()}</>,
                 });
               }}
             >
@@ -84,7 +85,7 @@ const Lobby = () => {
         ),
       });
     }
-  }, []);
+  }, [lobby]);
 
   return (
     <>
@@ -96,27 +97,16 @@ const Lobby = () => {
         ) : (
           ""
         )}
-        <div className="GameBoard">kzkzkzk</div>
+        <GameBoard />
         <div className="LobbyInfo">
           <div className="Info">
-            <p>Lobby Id</p>
+            <p>
+              Лобби #{queryString.parse(location.search).id} <Link size={18} />
+            </p>
             <p>Desk name</p>
           </div>
-          <div className="GameStatus">
-            <p>Очень ждем всех участников ы апривет</p>
-            <p>Начать игру</p>
-          </div>
-          <div className="PlayersList">
-            <p>Участники</p>
-
-            {lobby.players.map((player) => {
-              return (
-                <div>
-                  <p>{player.name}</p>
-                </div>
-              );
-            })}
-          </div>
+          <GameStatus />
+          <PlayersList></PlayersList>
         </div>
         <div className="Menu">
           <p>LOGO</p>

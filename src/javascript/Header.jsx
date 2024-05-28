@@ -1,47 +1,57 @@
 import React, { useState } from "react";
 
+import Cookies from "js-cookie";
+
+import { db } from "./firebaseConfig.js";
+import { ref, child, push, update } from "firebase/database";
+
+import { Copy } from "lucide-react";
+
 import Button from "./components/Button/Button.jsx";
 import Logo from "../imgs/knapp-logo.svg";
 import ModalWindow from "./components/ModalWindow/ModalWindow.jsx";
+import Input from "./components/Input/Input.jsx";
 
 const Header = () => {
+  Cookies.get("id") !== undefined
+    ? console.log(Cookies.get("id"))
+    : console.log(Cookies.set("id", Date.now()));
 
-  const desksList = [
-    { 
+  const decksList = [
+    {
       id: 1,
-      name: 'Deck #1',
-      description: 'Длинное или не очень описание колоды, темы вопросов и действий.'
+      name: "Deck #1",
+      description:
+        "Длинное или не очень описание колоды, темы вопросов и действий.",
     },
-    { 
+    {
       id: 2,
-      name: 'Deck #2',
-      description: 'Длинное или не очень описание колоды, темы вопросов и действий.'
+      name: "Deck #2",
+      description:
+        "Длинное или не очень описание колоды, темы вопросов и действий.",
     },
-    { 
+    {
       id: 3,
-      name: 'Deck #3',
-      description: 'Длинное или не очень описание колоды, темы вопросов и действий.'
+      name: "Deck #3",
+      description:
+        "Длинное или не очень описание колоды, темы вопросов и действий.",
     },
-    { 
+    {
       id: 4,
-      name: 'Deck #4',
-      description: 'Длинное или не очень описание колоды, темы вопросов и действий.'
-    }
-  ]
-  const [age, setAge] = useState(0)
-
-  const [checkedCard, setCheckedCard] = useState()
+      name: "Deck #4",
+      description:
+        "Длинное или не очень описание колоды, темы вопросов и действий.",
+    },
+  ];
 
   const [modalWindow, setModalWindow] = useState({
     show: false,
     content: "Пусто",
   });
 
-  function chooseCard(desk) {
-    console.log(desk.id);
-    console.log(checkedCard);
-    setCheckedCard(1);
-    console.log(checkedCard)
+  function chAge() {
+    setAge(1);
+    console.log(age);
   }
 
   return (
@@ -59,44 +69,121 @@ const Header = () => {
       <Button
         onClick={() => {
           console.log("Привет");
-          setCheckedCard(1)
           setModalWindow({
             show: true,
-            content: (
-              <>
-              {console.log(`Модалка отрендерилась`)}
-                <p className="A_Title large">Создаем лобби</p>
-                  <p className="A_Paragraph large">Выберите колоду</p>
-                  <div className="DeckContainer">
-                    {desksList.map((desk) => {
-                      return (
-                      <div 
-                      className={`Deck ${checkedCard === desk.id && ' checked'}`} 
-                      key={desk.id} 
-                      onClick={() => {
-                        console.log('Привет')
-                        setAge(1);
-                        console.log(age);
-                        }}>
-                      <p>{desk.name}</p>
-                      <p className="A_Paragraph small">{desk.description}</p>
-                      {console.log(`Карта №${desk.id} отрендерилась`)}
-                    </div>)
-                    })}
-                  </div>
-
-                  <button className="A_Button" type="submit">
-                    Продолжить
-                  </button>
-              </>
-            ),
           });
         }}
-      />
+      >
+        Начать игру
+      </Button>
 
-      {modalWindow.show && <ModalWindow>{modalWindow.content}</ModalWindow>}
+      {modalWindow.show && (
+        <ModalWindow>
+          <CreateLobbyModalWindow decksList={decksList} />
+        </ModalWindow>
+      )}
     </>
   );
 };
 
 export default Header;
+
+/**
+ *
+ *
+ * МОДАЛЬНОЕ ОКНО СОЗДАНИЯ ИГРЫ
+ */
+
+export const CreateLobbyModalWindow = ({ decksList }) => {
+  const [selectedDeck, setSelectedDeck] = useState(0);
+  const [deckSelected, setDeckSelected] = useState(false);
+
+  const newLobbyKey = push(child(ref(db), "lobbies")).key;
+  console.log(newLobbyKey);
+
+  function getLobbyKey() {}
+
+  if (!deckSelected) {
+    return (
+      <form>
+        <p className="A_Title large">Создаем лобби</p>
+        <p className="A_Paragraph large">Выберите колоду</p>
+        <div className="DeckContainer">
+          {decksList.map((deck) => {
+            return (
+              <div
+                className={`Deck${selectedDeck == deck.id ? " selected" : ""}`}
+                key={deck.id}
+                onClick={() => {
+                  console.log("Привет");
+                  setSelectedDeck(deck.id);
+                  console.log(selectedDeck);
+                }}
+              >
+                <p>{deck.name}</p>
+                <p className="A_Paragraph small">{deck.description}</p>
+              </div>
+            );
+          })}
+        </div>
+
+        <Button
+          disabled={selectedDeck === 0}
+          onClick={() => setDeckSelected(true)}
+        >
+          Продолжить
+        </Button>
+      </form>
+    );
+  } else {
+    return (
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          const playerName = Object.fromEntries(
+            new FormData(e.target).entries()
+          ).name;
+
+          update(ref(db, `lobbies/${newLobbyKey}`), {
+            hostId: Cookies.get("id"),
+            stage: "wait",
+            deckId: 0,
+            players: [
+              {
+                name: playerName,
+                id: Cookies.get("id"),
+                role: "host",
+              },
+            ],
+          }).then(() => {
+            document.location.href = `./pages/lobby.html?id=${newLobbyKey}`;
+          });
+        }}
+      >
+        <p className="A_Title large">Пригласить игроков</p>
+        <p className="A_Paragraph large">Ссылка-приглашение</p>
+        <Button
+          appearance="copy"
+          onClick={() => {
+            navigator.clipboard
+              .writeText(
+                window.location.href + "/pages/lobby.html?id=" + newLobbyKey
+              )
+              .then(() => console.log("Done!"))
+              .catch((err) => console.error(err));
+          }}
+        >
+          {window.location.href + "pages/lobby.html?id=" + newLobbyKey}
+          <Copy />
+        </Button>
+        <p className="A_Paragraph large">Придумайте себе ник</p>
+        <Input name={"name"} required={true} maxLength="10">
+          Например: Енот228
+        </Input>
+        <Button type={"submit"} onClick={() => {}}>
+          Перейти в лобби
+        </Button>
+      </form>
+    );
+  }
+};

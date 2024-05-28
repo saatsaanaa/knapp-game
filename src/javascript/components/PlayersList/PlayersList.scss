@@ -1,0 +1,17 @@
+.PlayersList {
+  position: absolute;
+  bottom: 32px;
+  width: 100%;
+
+  padding: 14px 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e4e4f6;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}

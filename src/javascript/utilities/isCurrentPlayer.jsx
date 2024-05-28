@@ -1,8 +1,10 @@
 import React from "react";
 
-const isCurrentPlayer = (stage) => {
-  if (stage === "game") {
-    return userData[0].id === data.val().game.currentPlayerId;
+const isCurrentPlayer = (lobby, userId) => {
+  if (lobby.stage === "game") {
+    console.log(lobby.game.currentPlayerId);
+    console.log(userId);
+    return lobby.game.currentPlayerId === userId;
   } else return false;
 };
 

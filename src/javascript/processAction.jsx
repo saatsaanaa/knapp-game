@@ -34,12 +34,15 @@ export const processAction = (action, actionKey, lobby, user) => {
       getCardPair(pairs[0][0], pairs[0][1]).then((cards) => {
         console.log(cards);
 
-        update(ref(db, `lobbies/${lobby.lobbyId}`), { stage: "game" });
-        update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
-          currentPlayerId: lobby.players[0].id,
-          status: "pick",
-          currentPair: [0, cards.truth, cards.dare],
-          pairs: pairs,
+        update(ref(db, `lobbies/${lobby.lobbyId}`), {
+          ...lobby,
+          stage: "game",
+          game: {
+            currentPlayerId: lobby.players[0].id,
+            status: "pick",
+            currentPair: [0, cards.truth, cards.dare],
+            pairs: pairs,
+          },
         });
       });
     } else console.log("Игра уже началась");

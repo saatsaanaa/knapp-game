@@ -1,41 +1,23 @@
-import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import React from "react";
+import "./Button.scss";
 
-import { db } from "../../firebaseConfig";
-import { ref, get, child, push, update, onValue } from "firebase/database";
-
-const Button = ({ onClick }) => {
+const Button = ({ onClick, appearance, disabled, type, children }) => {
   /*Проверяем наличие айди юзера*/
-  Cookies.get("id") !== undefined
-    ? console.log(Cookies.get("id"))
-    : console.log(Cookies.set("id", Date.now()));
-
+  disabled == undefined && (disabled = false);
+  appearance == undefined ? (appearance = "") : (appearance = " " + appearance);
+  type == undefined && (type = "button");
   return (
     <>
-      <button className="A_Button" onClick={onClick}>
-        Начать игру
+      <button
+        className={`A_Button` + appearance}
+        disabled={disabled}
+        onClick={onClick}
+        type={type}
+      >
+        {children}
       </button>
     </>
   );
 };
 
 export default Button;
-
-/* Создаем новую комнату*/
-/*const newLobbyKey = push(child(ref(db), "lobbies")).key;
-          console.log(newLobbyKey);
-
-          update(ref(db, `lobbies/${newLobbyKey}`), {
-            hostId: Cookies.get("id"),
-            stage: "wait",
-            deckId: 0,
-            players: [
-              {
-                name: "Настя",
-                id: Cookies.get("id"),
-                role: "host",
-              },
-            ],
-          }).then(() => {
-            document.location.href = `./pages/lobby.html?id=${newLobbyKey}`;
-          });*/

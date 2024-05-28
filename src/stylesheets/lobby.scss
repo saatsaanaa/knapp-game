@@ -5,7 +5,7 @@
 .Lobby {
   width: 100vw;
   height: 100vh;
-  padding: 0 40px;
+  padding: 0 calc(100vw * 0.02083);
   background-color: #f7f8fc;
 
   display: grid;
@@ -51,12 +51,6 @@
     }
   }
 
-  .GameBoard {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
   .LobbyInfo {
     position: relative;
     grid-row: span 2;
@@ -67,26 +61,6 @@
 
     .Info {
       margin-bottom: 24px;
-    }
-
-    .GameStatus {
-      display: flex;
-      justify-content: space-between;
-      padding: 20px 16px;
-      border-radius: 8px;
-      background-color: #ffffff;
-      border: 1px solid #e4e4f6;
-    }
-
-    .PlayersList {
-      position: absolute;
-      bottom: 32px;
-      width: 100%;
-
-      padding: 20px 16px;
-      background-color: #ffffff;
-      border-radius: 8px;
-      border: 1px solid #e4e4f6;
     }
   }
   .Menu {

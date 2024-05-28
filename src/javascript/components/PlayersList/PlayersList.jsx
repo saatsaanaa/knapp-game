@@ -13,19 +13,19 @@ const PlayersList = () => {
   const dispatch = useDispatch();
 
   return (
-    <div className="C_PlayersList">
+    <div className="PlayersList">
       <div className="header">
-        <p className="A_Title medium">Участники</p>
-        <p className="A_Title medium blue">{lobby.players.length}/8</p>
+        <p className="Headline">Участники</p>
+        <p className="Headline blue">{lobby.players.length}/8</p>
       </div>
       {lobby.players.map((player) => (
         <div key={player.id} className="O_PlayerItem">
           <div>
-            <p className="A_Title small">{player.name}</p>
-            <p className="A_Paragraph medium blue">
+            <p className="Body-1">{player.name}</p>
+            <p className="Body-1 blue">
               {player.id === lobby.hostId
                 ? "Хост"
-                : user.isHost && <X style={{ cursor: "pointer" }} />}
+                : user.role === "host" && <X style={{ cursor: "pointer" }} />}
             </p>
           </div>
         </div>
