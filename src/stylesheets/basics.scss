@@ -36,20 +36,28 @@ p {
   }
 
   &.Headline {
-    font-size: 20px;
+    font-size: 19px;
     font-weight: 500;
   }
 
   &.Body-1 {
-    font-size: 18px;
-    font-weight: 400;
-  }
-
-  &.Body-2 {
     font-size: 16px;
     font-weight: 400;
   }
 
+  &.Body-2 {
+    font-size: 14px;
+    font-weight: 400;
+  }
+
+  &.link {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--blue-600);
+  }
+
+  /***/
   &.A_Title {
     font-weight: 500;
 

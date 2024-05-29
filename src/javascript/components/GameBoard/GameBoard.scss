@@ -35,6 +35,11 @@
     --c: rgb(17, 208, 163);
   }
 
+  &:has(.Card.for-current-player.dare.choosen) {
+    --x: 20%;
+    --c: rgb(223, 92, 74);
+  }
+
   .Card {
     color: rgba($color: #fff, $alpha: 0.8);
 
@@ -60,9 +65,6 @@
 
     &.truth {
       transform: rotateZ(-15deg);
-
-      &.choosen + .Card.dare.for-current-player {
-      }
     }
 
     &.dare {
@@ -108,11 +110,11 @@
             }
           }
         }
-      }
-    }
 
-    &.for-spectator {
-      &.choosen {
+        &.dare {
+          background-color: rgba($color: #df5c4a, $alpha: 0.6);
+          border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
+      }
       }
     }
 
@@ -121,6 +123,17 @@
       transform: rotateZ(0) scale(1.1);
       z-index: 1;
     }
+  }
+
+  &:has(.Card.for-current-player.dare.choosen) {
+    .Card.truth.for-current-player {
+      background-color: rgba($color: #fff, $alpha: 0.1);
+      border: 2px solid rgba($color: #fff, $alpha: 0.2);
+  }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100vw;
   }
 }
 

@@ -26,6 +26,7 @@ import HostPixel from "./utilities/HostPixel.jsx";
 import GameStatus from "./components/GameStatus/GameStatus.jsx";
 import { Link } from "lucide-react";
 import GameBoard from "./components/GameBoard/GameBoard.jsx";
+import Button from "./components/Button/Button.jsx";
 
 /**
  * ЛОББИ
@@ -100,18 +101,21 @@ const Lobby = () => {
         <GameBoard />
         <div className="LobbyInfo">
           <div className="Info">
-            <p>
-              Лобби #{queryString.parse(location.search).id} <Link size={18} />
-            </p>
-            <p>Desk name</p>
+            <div className="lobby-link">
+              <p className="link">
+                Лобби #{queryString.parse(location.search).id} 
+              </p>
+              <Link size={18} color="#2a1efb"/>
+            </div>
+            <p className="Body-2">Колода "Познакомимся?"</p>
           </div>
           <GameStatus />
           <PlayersList></PlayersList>
         </div>
         <div className="Menu">
-          <p>LOGO</p>
-          <p>Правила</p>
-          <p>Кнопка</p>
+          <div className="logo"/>
+          <p className="link">Правила</p>
+          <Button>Покинуть игру</Button>
         </div>
       </div>
       {user.role === "host" ? <HostPixel /> : console.log("Не хост")}

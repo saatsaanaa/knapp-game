@@ -16,34 +16,100 @@ const GameStatus = () => {
     return (
       <div className="GameStatus">
         <p className="Title-2">Ожидание игроков</p>
-        <Button
-          disabled={user.role !== "host" || lobby.players.length < 2}
+        { user.role === "host" && <Button
+          disabled={lobby.players.length < 2}
           onClick={() => sendAction("START_GAME", lobby, user)}
         >
           Начать игру
-        </Button>
+        </Button>}
+        
       </div>
     );
-  } else if (lobby.stage === "game") {
-    return (
-      <div className="GameStatus">
-        <p className="Title-2">
-          {user.isCurrentPlayer
-            ? "Ваш ход"
-            : `Ход игрока ${
-                lobby.players.filter((player) => {
-                  return player.id === lobby.game.currentPlayerId;
-                })[0].name
-              }`}
+  } /// Игра идет
+  else if (lobby.stage === "game") {
+    if (user.isCurrentPlayer) {
+      if (lobby.game.status === "pick"){
+        return (
+          <div className="GameStatus">
+            <div className="status-container">
+              <p className="Title-2">
+                <span>Ваш ход</span>
+              </p>
+              <p className="Body-2">
+                Выберите карту
+              </p> 
+            </div>
+
+            <Button disabled={true}>Передать ход</Button>
+          </div>
+        )
+      } else if (lobby.game.status === "true") {
+        return (
+          <div className="GameStatus">
+            <div className="status-container">
+              <p className="Title-2">
+                <span>Ваш ход</span>
+              </p>
+              <p className="Body-2">
+                Вы можете поменять правду на действие 
+              </p> 
+            </div>
+
+            <Button disabled={true}>Передать ход</Button>
+          </div>
+        )
+      } else if (lobby.game.status === "dare") {
+        return (
+          <div className="GameStatus">
+              <p className="Title-2">
+                <span>Ваш ход</span>
+              </p>
+
+            <Button disabled={true}>Передать ход</Button>
+          </div>
+        )
+      } else if (lobby.game.status == "PASS_TURN") {
+        return (
+          <div className="GameStatus">
+              <p className="Title-2">
+              {lobby.game.previousStatus == "true" ? (
+                "Вы ответили на вопрос"
+              ) : (
+                lobby.game.previousStatus == "dare" && (
+                  "Вы выполнили действие"
+                )
+              )}
+              </p>
+          </div>
+        )
+      }
+    } else {
+        return(
+          <div className="GameStatus">
+            <div className="status-container">
+            <p className="Title-2">
+          Ход игрока 
+          <span>
+            {
+              " " + lobby.players.filter((player) => {
+                return player.id === lobby.game.currentPlayerId;
+              })[0].name
+            } 
+          </span>
         </p>
-        <Button
-          disabled={user.role !== "host" || lobby.players.length < 2}
-          onClick={() => sendAction("START_GAME", lobby, user)}
-        >
-          Начать игру
-        </Button>
-      </div>
-    );
+            </div>
+
+            <Button 
+              disabled={lobby.game.status === "pick"}
+              onClick={
+                () => {sendAction("APPROVE_TURN", lobby, user)}
+              }>
+                Подтвердить ход
+            </Button>
+          </div>
+          
+        )
+    }
   }
 };
 

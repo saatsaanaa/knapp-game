@@ -66,6 +66,9 @@ const GameBoard = () => {
           {(lobby.game.status === "pick" || lobby.game.status === "true") && (
             <p className="Title-1">Действие</p>
           )}
+          {lobby.game.status === "dare" && (
+            <p className="Body-1">{lobby.game.currentPair[2]}</p>
+          )}
         </div>
       </div>
     );
