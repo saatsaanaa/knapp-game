@@ -59,6 +59,11 @@ export const processAction = (action, actionKey, lobby, user) => {
         console.log("Выбрали действие");
         update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "dare" });
       }
+    } else if (lobby.game.status === "true") {
+      if (action.actionType.includes("DARE")) {
+        console.log("Сменили правду на действие");
+        update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "dare" });
+      }
     }
 
     /**

@@ -20,18 +20,23 @@
     background: radial-gradient(closest-side, var(--c) var(--x), transparent);
   }
 
-  &:has(.Card.truth.active:hover) {
+  &:has(.Card.truth.for-current-player.active:hover) {
     animation: radialBackgroundChange-1 0.4s;
     animation-fill-mode: forwards;
   }
 
-  &:has(.Card.dare.active:hover) {
+  &:has(.Card.dare.for-current-player.active:hover) {
     animation: radialBackgroundChange-2 0.4s;
     animation-fill-mode: forwards;
   }
 
+  &:has(.Card.for-current-player.truth.choosen) {
+    --x: 20%;
+    --c: rgb(17, 208, 163);
+  }
+
   .Card {
-    color: rgba($color: #fff, $alpha: 0.5);
+    color: rgba($color: #fff, $alpha: 0.8);
 
     display: flex;
     justify-content: center;
@@ -56,52 +61,65 @@
     &.truth {
       transform: rotateZ(-15deg);
 
-      &.active {
-        cursor: pointer;
-        color: #fff;
-        background-color: rgba($color: #6600ff, $alpha: 0.4);
-        border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
-
-        &:hover {
-          background-color: rgba($color: #11d0a3, $alpha: 0.6);
-          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
-          transform: rotateZ(-10deg) scale(1.1);
-        }
+      &.choosen + .Card.dare.for-current-player {
       }
     }
 
     &.dare {
       transform: rotateZ(15deg);
+    }
+
+    &.for-current-player {
+      background-color: rgba($color: #6600ff, $alpha: 0.4);
+      border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
 
       &.active {
         cursor: pointer;
         color: #fff;
-        background-color: rgba($color: #6600ff, $alpha: 0.4);
-        border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
 
-        &:hover {
+        &.truth:hover {
+          z-index: 1;
+          background-color: rgba($color: #11d0a3, $alpha: 0.6);
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
+          transform: rotateZ(-10deg) scale(1.1);
+        }
+
+        &.dare:hover {
+          z-index: 1;
           background-color: rgba($color: #df5c4a, $alpha: 0.6);
           border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
           transform: rotateZ(10deg) scale(1.1);
         }
       }
+
+      &.choosen {
+        &.truth {
+          background-color: rgba($color: #11d0a3, $alpha: 0.6);
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
+
+          & + .Card.dare.for-current-player {
+            cursor: pointer;
+            transform: translateX(50%) rotateZ(15deg);
+
+            &:hover {
+              transform: translateX(80%) rotateZ(20deg);
+              background-color: rgba($color: #6600ff, $alpha: 0.6);
+              border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
+            }
+          }
+        }
+      }
     }
 
-    &.active {
-      cursor: pointer;
-      background-color: #6600ff;
-
-      &:hover {
-        z-index: 1;
-        background-color: #11d0a3;
+    &.for-spectator {
+      &.choosen {
       }
+    }
 
-      &:first-child:hover {
-      }
-
-      &:last-child:hover {
-        transform: rotateZ(10deg) scale(1.1);
-      }
+    &.choosen {
+      position: absolute;
+      transform: rotateZ(0) scale(1.1);
+      z-index: 1;
     }
   }
 }

@@ -31,11 +31,10 @@ const GameBoard = () => {
     return (
       <div className="GameBoard">
         <div
-          className={`Card truth${
-            user.isCurrentPlayer && lobby.game.status === "pick"
-              ? " active"
-              : ""
-          }`}
+          className={`Card truth
+          ${user.isCurrentPlayer ? " for-current-player" : " for-spectator"}${
+            lobby.game.status === "pick" ? " active" : ""
+          }${lobby.game.status === "true" ? " choosen" : ""}`}
           onClick={() => {
             if (lobby.game.status === "pick" && user.isCurrentPlayer) {
               sendAction("PICK_TRUE", lobby, user);
@@ -43,16 +42,24 @@ const GameBoard = () => {
           }}
         >
           {lobby.game.status === "pick" && <p className="Title-1">Правда</p>}
+          {lobby.game.status === "true" && (
+            <p className="Body-1">{lobby.game.currentPair[1]}</p>
+          )}
         </div>
         <div
           className={`Card dare${
-            user.isCurrentPlayer && lobby.game.status === "pick"
-              ? " active"
-              : ""
+            user.isCurrentPlayer ? " for-current-player" : " for-spectator"
+          }${lobby.game.status === "pick" ? " active" : ""}${
+            lobby.game.status === "dare" ? " choosen" : ""
           }`}
           onClick={() => {
-            if (lobby.game.status === "pick" && user.isCurrentPlayer) {
-              sendAction("PICK_DARE", lobby, user);
+            if (user.isCurrentPlayer) {
+              if (
+                lobby.game.status === "pick" ||
+                lobby.game.status === "true"
+              ) {
+                sendAction("PICK_DARE", lobby, user);
+              }
             }
           }}
         >
