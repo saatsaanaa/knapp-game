@@ -141,6 +141,7 @@ export const processAction = (action, actionKey, lobby, user) => {
                         status: "pick",
                         nextCurrentPlayerId: null,
                         approves: null,
+                        previousStatus: null,
                         currentPair: [nextCurrentPair, cards.truth, cards.dare],
                       });
                     });

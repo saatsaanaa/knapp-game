@@ -106,8 +106,8 @@ export const CreateLobbyModalWindow = ({ decksList }) => {
   if (!deckSelected) {
     return (
       <form>
-        <p className="A_Title large">Создаем лобби</p>
-        <p className="A_Paragraph large">Выберите колоду</p>
+        <p className="Title-1">Создаем лобби</p>
+        <p className="Headline">Выберите колоду</p>
         <div className="DeckContainer">
           {decksList.map((deck) => {
             return (
@@ -120,8 +120,15 @@ export const CreateLobbyModalWindow = ({ decksList }) => {
                   console.log(selectedDeck);
                 }}
               >
-                <p>{deck.name}</p>
-                <p className="A_Paragraph small">{deck.description}</p>
+                <div className="deck-background">
+                  {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
+                    <div className={"rectangle-" + n}></div>
+                  ))}
+                </div>
+                <div className="deck-content">
+                  <p className="Headline">{deck.name}</p>
+                  <p className="Body-1">{deck.description}</p>
+                </div>
               </div>
             );
           })}

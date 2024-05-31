@@ -27,6 +27,7 @@ import GameStatus from "./components/GameStatus/GameStatus.jsx";
 import { Link } from "lucide-react";
 import GameBoard from "./components/GameBoard/GameBoard.jsx";
 import Button from "./components/Button/Button.jsx";
+import ModalWindow from "./components/ModalWindow/ModalWindow.jsx";
 
 /**
  * ЛОББИ
@@ -36,6 +37,7 @@ const Lobby = () => {
     show: false,
     content: "Пусто",
   });
+
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
@@ -92,9 +94,9 @@ const Lobby = () => {
     <>
       <div className="Lobby">
         {modalWindow.show ? (
-          <div className="ModalWindow">
+          <ModalWindow>
             <div>{modalWindow.content}</div>
-          </div>
+          </ModalWindow>
         ) : (
           ""
         )}
@@ -103,9 +105,9 @@ const Lobby = () => {
           <div className="Info">
             <div className="lobby-link">
               <p className="link">
-                Лобби #{queryString.parse(location.search).id} 
+                Лобби #{queryString.parse(location.search).id}
               </p>
-              <Link size={18} color="#2a1efb"/>
+              <Link size={18} color="#2a1efb" />
             </div>
             <p className="Body-2">Колода "Познакомимся?"</p>
           </div>
@@ -113,7 +115,7 @@ const Lobby = () => {
           <PlayersList></PlayersList>
         </div>
         <div className="Menu">
-          <div className="logo"/>
+          <div className="logo" />
           <p className="link">Правила</p>
           <Button>Покинуть игру</Button>
         </div>

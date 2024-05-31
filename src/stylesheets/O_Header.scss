@@ -16,4 +16,14 @@
   > button {
     justify-self: right;
   }
+
+  @media (max-width: 1024px) {
+    width: 100vw;
+    padding: 14px 20px;
+    grid-template-columns: 1fr 1fr;
+
+    > .LinkGroup {
+      display: none;
+    }
+  }
 }

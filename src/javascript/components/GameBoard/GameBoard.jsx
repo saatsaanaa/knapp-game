@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { sendAction } from "../../sendAction.jsx";
 
 import "./GameBoard.scss";
+import isApproveExisting from "../../utilities/isApproveExisting.jsx";
 
 const GameBoard = () => {
   const lobby = useSelector((state) => state.lobby.lobby);
@@ -30,11 +31,26 @@ const GameBoard = () => {
   } else if (lobby.stage === "game") {
     return (
       <div className="GameBoard">
+        {lobby.game.approves !== undefined && (
+          <div className="approves-container">
+            {Object.values(lobby.game.approves).map((approve) => (
+              <div className="approve">
+                <p className="Body-2">
+                  <span>Игрок {" " + approve.name + " "} подтвердил ход</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
         <div
           className={`Card truth
           ${user.isCurrentPlayer ? " for-current-player" : " for-spectator"}${
             lobby.game.status === "pick" ? " active" : ""
-          }${lobby.game.status === "true" ? " choosen" : ""}`}
+          }${
+            lobby.game.status === "true" || lobby.game.previousStatus === "true"
+              ? " choosen"
+              : ""
+          }`}
           onClick={() => {
             if (lobby.game.status === "pick" && user.isCurrentPlayer) {
               sendAction("PICK_TRUE", lobby, user);
@@ -42,15 +58,20 @@ const GameBoard = () => {
           }}
         >
           {lobby.game.status === "pick" && <p className="Title-1">Правда</p>}
-          {lobby.game.status === "true" && (
+          {(lobby.game.status === "true" ||
+            lobby.game.previousStatus === "true") && (
             <p className="Body-1">{lobby.game.currentPair[1]}</p>
           )}
         </div>
+
+        {/**------------ДЕЙСТВИЕ---------------*/}
         <div
           className={`Card dare${
             user.isCurrentPlayer ? " for-current-player" : " for-spectator"
           }${lobby.game.status === "pick" ? " active" : ""}${
-            lobby.game.status === "dare" ? " choosen" : ""
+            lobby.game.status === "dare" || lobby.game.previousStatus === "dare"
+              ? " choosen"
+              : ""
           }`}
           onClick={() => {
             if (user.isCurrentPlayer) {
@@ -66,72 +87,14 @@ const GameBoard = () => {
           {(lobby.game.status === "pick" || lobby.game.status === "true") && (
             <p className="Title-1">Действие</p>
           )}
-          {lobby.game.status === "dare" && (
+          {(lobby.game.status === "dare" ||
+            lobby.game.previousStatus === "dare") && (
             <p className="Body-1">{lobby.game.currentPair[2]}</p>
           )}
         </div>
       </div>
     );
-    /*if (user.isCurrentPlayer) {
-      return (
-        <div className="GameBoard">
-          <div
-            className={cardState()}
-            onClick={() => sendAction("PICK_TRUE", lobby, user)}
-          >
-            <p className="Title-1">Правда</p>
-          </div>
-          <div
-            className={cardState()}
-            onClick={() => sendAction("PICK_DARE", lobby, user)}
-          >
-            {lobby.game.status === "dare" ? (
-              <p className="Body-1">{lobby.game.currentPair[2]}</p>
-            ) : (
-              <p className="Title-1">Действие</p>
-            )}
-          </div>
-        </div>
-      );
-    } else {
-      return (
-        <div className="GameBoard">
-          <div className={cardState()}>
-            <p className="Title-1">Правда</p>
-          </div>
-          <div className={cardState()}>
-            <p className="Title-1">Действие</p>
-          </div>
-        </div>
-      );
-    }*/
   }
-
-  /*return (
-    <div className="GameBoard">
-      {lobby.stage === "wait" ? (
-        <p className="Headline">
-          Пригласите других игроков, <br /> отправив им ссылку-приглашение
-          <Link />
-        </p>
-      ) : (
-        <>
-          <div
-            className={`Card true${user.isCurrentPlayer ? " clickable" : ""}`}
-          >
-            <p className="Title-1">Правда</p>
-          </div>
-          <div
-            className={`Card dare${user.isCurrentPlayer ? " clickable" : ""}${
-              lobby.game.status === "dare" ? " active" : ""
-            }`}
-          >
-            <p className="Title-1">Действие</p>
-          </div>
-        </>
-      )}
-    </div>
-  );*/
 };
 
 export default GameBoard;

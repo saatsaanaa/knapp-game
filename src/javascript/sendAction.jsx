@@ -42,6 +42,7 @@ export const sendAction = (actionType, lobby, user) => {
      * Подтверждение хода
      */
   } else if (actionType === "APPROVE_TURN") {
+    console.log(lobby.game.approves !== undefined);
     actionData = {};
     /**
      *

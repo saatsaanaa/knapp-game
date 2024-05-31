@@ -12,30 +12,36 @@ const PlayersList = () => {
 
   const dispatch = useDispatch();
 
+  const [infoOpen, setInfoOpen] = useState(false);
+
   return (
-    <div className="PlayersList">
+    <div
+      className={`PlayersList${infoOpen ? " open" : ""}`}
+      onTouchStart={() => setInfoOpen(!infoOpen)}
+    >
+      <hr />
       <div className="header">
         <p className="Headline">Участники</p>
         <p className="Headline blue">{lobby.players.length}/8</p>
       </div>
-      {lobby.players.map((player) => (
-        <div key={player.id} className="PlayerItem">
-          <div>
-            <p className="Body-1">{player.name}</p>
-            <p className="Body-1 blue">
-              {player.id === lobby.hostId
-                ? "Хост"
-                : user.role === "host" && <X style={{ cursor: "pointer" }} />}
-            </p>
+      <div className="players-container">
+        {lobby.players.map((player) => (
+          <div key={player.id} className="PlayerItem">
+            <div>
+              <p className="Body-1">{player.name}</p>
+              <p className="Body-1 blue">
+                {player.id === lobby.hostId
+                  ? "Хост"
+                  : user.role === "host" && <X style={{ cursor: "pointer" }} />}
+              </p>
+            </div>
+            <div>
+              <p className="Body-2">Бонус смены вопроса</p>
+              <p className="Body-2 blue">x0</p>
+            </div>
           </div>
-          <div>
-            <p className="Body-2">Бонус смены вопроса</p>
-            <p className="Body-2 blue">
-              x0
-            </p>
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

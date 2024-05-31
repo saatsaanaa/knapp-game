@@ -1,5 +1,5 @@
 .ModalWindow {
-  z-index: 2;
+  z-index: 5;
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,17 @@
   justify-content: center;
   backdrop-filter: blur(5px);
 
-  > form {
+  > div {
+    > form {
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+      justify-content: center;
+    }
+  }
+
+  > form,
+  > div {
     display: flex;
     width: 800px;
     gap: 16px;
@@ -22,40 +32,108 @@
     padding: 24px 28px;
     border-radius: 8px;
 
-    z-index: 2;
-
     button {
       align-self: center;
-    }
-
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
     }
 
     .DeckContainer {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
+      max-height: 60vh;
+      overflow-y: scroll;
+
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
       .Deck {
+        position: relative;
         cursor: pointer;
-        border-radius: 4px;
-        border: 2px solid rgb(190, 190, 190);
-        padding: 16px;
+        border-radius: 16px;
+        border: 2px solid #eae4ff;
 
-        &.selected {
-          background-color: rgb(190, 190, 190);
+        background: radial-gradient(
+          farthest-corner at 72% 10%,
+          rgb(102, 0, 255) 0%,
+          transparent 80%
+        );
 
-          &:hover {
-            background-color: rgb(190, 190, 190);
+        .deck-background {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          grid-template-rows: repeat(4, 1fr);
+
+          > div {
+            background: rgba($color: #6600ff, $alpha: 0.01);
+            width: calc((100vw - 100px) / 6);
+            height: calc((100vw - 100px) / 6);
+            backdrop-filter: blur(24px);
+
+            &.rectangle-1 {
+              grid-column-start: 4;
+            }
+
+            &.rectangle-2 {
+              grid-column-start: 2;
+            }
+
+            &.rectangle-4 {
+              grid-column-start: 6;
+            }
+
+            &.rectangle-6 {
+              grid-column-start: 4;
+            }
+
+            &.rectangle-8 {
+              grid-column-start: 3;
+            }
           }
         }
 
-        &:hover {
-          background-color: rgb(190, 190, 190);
+        .deck-content {
+          position: absolute;
+          width: calc(100vw - 132px);
+          bottom: 18px;
+          left: 18px;
         }
+
+        &:hover {
+        }
+
+        &.selected {
+          background: radial-gradient(
+              farthest-corner at 72% 10%,
+              transparent 0%,
+              rgb(102, 0, 255) 100%
+            ),
+            radial-gradient(
+              farthest-corner at 80% 37%,
+              rgb(223, 92, 74) 0%,
+              transparent 80%
+            );
+          color: #fff;
+          border: 2px solid #6600ff;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100vw;
+    padding: 20px;
+
+    > form {
+      width: 100%;
+      gap: 16px;
+
+      .DeckContainer {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
       }
     }
   }

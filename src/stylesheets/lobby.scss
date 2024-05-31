@@ -17,51 +17,6 @@
     grid-template-columns: 17fr 7fr;
   }
 
-  @media (max-width: 1024px) {
-    grid-template-columns: 17fr 7fr;
-    padding: 0 20px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .ModalWindow {
-    z-index: 2;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(0 0 0 / 0.6);
-
-    display: grid;
-    gap: 40px;
-    grid-template-columns: repeat(6, 1fr);
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(5px);
-
-    div {
-      grid-column: 3 / span 2;
-
-      display: flex;
-      gap: 16px;
-      flex-direction: column;
-      background-color: white;
-      padding: 24px;
-      border-radius: 8px;
-
-      button {
-        align-self: center;
-      }
-
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-    }
-  }
-
   .LobbyInfo {
     position: relative;
     grid-row: span 2;
@@ -81,6 +36,7 @@
       }
     }
   }
+
   .Menu {
     padding: 24px 0 32px;
     display: flex;
@@ -88,7 +44,7 @@
     align-items: center;
 
     .logo {
-      background: url('imgs/knapp-logo.svg');
+      background: url("imgs/knapp-logo.svg");
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
@@ -98,6 +54,32 @@
 
     @media (max-width: 1024px) {
       order: -1;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+
+    .LobbyInfo {
+      z-index: 2;
+      position: absolute;
+      width: 100vw;
+      left: 0;
+      bottom: 0;
+      padding: 0px;
+      gap: 8px;
+
+      overflow: hidden;
+
+      .Info {
+        display: none;
+      }
+    }
+
+    .Menu {
+      padding: 24px 0 0;
     }
   }
 }
