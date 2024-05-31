@@ -10,6 +10,18 @@
   initial-value: rgb(102, 0, 255);
 }
 
+@property --gb-st-end {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+/*@property --c {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(102, 0, 255);
+}*/
+
 .GameBoard {
   position: relative;
   display: flex;
@@ -49,8 +61,8 @@
     align-items: center;
 
     border-radius: 16px;
-    width: 25vw;
-    height: 37.5vw;
+    width: 22vw;
+    height: 33vw;
     max-width: 420px;
     max-height: 630px;
     background-color: rgba($color: #fff, $alpha: 0.1);
@@ -175,6 +187,25 @@
     }
   }
 
+  &.state-end {
+    gap: 16px;
+    flex-wrap: wrap;
+
+    /*----------Лоадер----------*/
+    .lucide-loader {
+      animation: loader-rotate 4s infinite linear;
+    }
+
+    @keyframes loader-rotate {
+      from {
+        transform: rotateZ(0);
+      }
+      to {
+        transform: rotateZ(360deg);
+      }
+    }
+  }
+
   @media (max-width: 1024px) {
     width: 100%;
     height: calc(100% - 218px);
@@ -182,26 +213,25 @@
 
     .Card {
       position: absolute;
-      width: 230px;
-      height: 345px;
+      width: 54vw;
+      height: 81vw;
 
       transition: all 0.4s ease-out;
 
-      &:first-child {
-        top: 20px;
-        left: 20px;
-      }
-      &:last-child {
-        bottom: 20px;
-        right: 20px;
+      .Body-1 {
+        width: 85%;
       }
 
       &.truth {
         transform: rotateZ(-7deg);
+        top: 40px;
+        left: 20px;
       }
 
       &.dare {
         transform: rotateZ(7deg);
+        bottom: 20px;
+        right: 20px;
       }
 
       &.for-current-player {

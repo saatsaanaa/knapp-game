@@ -1,0 +1,51 @@
+.deck {
+    position: relative;
+    cursor: pointer;
+    border-radius: 16px;
+    border: 2px solid #eae4ff;
+
+    background: radial-gradient(
+      farthest-corner at 72% 10%,
+      rgb(102, 0, 255) 0%,
+      transparent 80%
+    );
+
+    .deck-background {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+
+      > div {
+        background: rgba($color: #6600ff, $alpha: 0.01);
+        backdrop-filter: blur(24px);
+        width: 50px;
+        height: 50px;
+
+        &.rectangle-1 {
+          grid-column-start: 4;
+        }
+
+        &.rectangle-2 {
+          grid-column-start: 2;
+        }
+
+        &.rectangle-4 {
+          grid-column-start: 6;
+        }
+
+        &.rectangle-6 {
+          grid-column-start: 4;
+        }
+
+        &.rectangle-8 {
+          grid-column-start: 3;
+        }
+      }
+    }
+
+    .deck-content {
+      position: absolute;
+      bottom: 18px;
+      left: 18px;
+    }
+}

@@ -101,8 +101,6 @@ export const CreateLobbyModalWindow = ({ decksList }) => {
   const newLobbyKey = push(child(ref(db), "lobbies")).key;
   console.log(newLobbyKey);
 
-  function getLobbyKey() {}
-
   if (!deckSelected) {
     return (
       <form>

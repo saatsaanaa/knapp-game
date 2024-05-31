@@ -68,9 +68,9 @@
 
           > div {
             background: rgba($color: #6600ff, $alpha: 0.01);
-            width: calc((100vw - 100px) / 6);
-            height: calc((100vw - 100px) / 6);
             backdrop-filter: blur(24px);
+            width: 38px;
+            height: 38px;
 
             &.rectangle-1 {
               grid-column-start: 4;
@@ -96,7 +96,6 @@
 
         .deck-content {
           position: absolute;
-          width: calc(100vw - 132px);
           bottom: 18px;
           left: 18px;
         }
@@ -134,6 +133,19 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 16px;
+
+        .Deck {
+          .deck-background {
+            > div {
+              width: calc((100vw - 100px) / 6);
+              height: calc((100vw - 100px) / 6);
+            }
+          .deck-content {
+            width: calc(100vw - 132px);
+          }
+          }
+        }
+
       }
     }
   }

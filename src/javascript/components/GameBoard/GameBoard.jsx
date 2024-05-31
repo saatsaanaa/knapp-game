@@ -1,4 +1,4 @@
-import { Link } from "lucide-react";
+import { Link, Loader } from "lucide-react";
 import React from "react";
 
 import { useSelector } from "react-redux";
@@ -94,7 +94,51 @@ const GameBoard = () => {
         </div>
       </div>
     );
+  } else if (lobby.stage === "end") {
+    return (
+      <div className="GameBoard state-end">
+        {user.role === "host" ? <>
+          {[
+            {
+              name: 'Колода 1', 
+              description: 'Какая-то колодв'
+            },
+            {
+              name: 'Колода 2', 
+              description: 'Какая-то колодв'
+            },
+            {
+              name: 'Колода 3', 
+              description: 'Какая-то колодв'
+            }
+          ].map((deck, index) => <Deck>
+              <>
+                <p key={index} className="Headline">{deck.name}</p>
+                <p className="Body-1">{deck.description}</p>
+              </> 
+            </Deck>)}</> : <Loader color={'#6600ff'} size={50}/>}
+      </div>
+    )
   }
 };
 
 export default GameBoard;
+
+export const Deck = ({children}) => {
+  return (
+    <div
+      className={`deck`}
+      onClick={() => {
+      }}
+    >
+      <div className="deck-background">
+        {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
+          <div className={"rectangle-" + n}></div>
+        ))}
+      </div>
+      <div className="deck-content">
+        {children}
+      </div>
+    </div>
+  )
+}
