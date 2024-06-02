@@ -1,6 +1,6 @@
 body.index {
   .Cover {
-    width: 1392px;
+    width: 1280px;
     height: calc(100vh - 78px - 24px);
     background-color: #bfcdff;
     border-radius: 24px;
@@ -9,6 +9,10 @@ body.index {
     grid-template-columns: 275fr 1501fr;
     grid-gap: 32px;
     gap: 32px;
+  }
+
+  @media (max-width: 1024px) {
+    /*width: 100vw;*/
   }
 
   img {

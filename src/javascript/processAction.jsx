@@ -20,6 +20,7 @@ export const processAction = (action, actionKey, lobby, user) => {
           id: action.actionData.id,
           name: action.actionData.name,
           role: "player",
+          bonuses: 0,
         }
       );
     } else console.log("Такой юзер сущесвует");
@@ -34,12 +35,15 @@ export const processAction = (action, actionKey, lobby, user) => {
       getCardPair(pairs[0][0], pairs[0][1]).then((cards) => {
         console.log(cards);
 
-        update(ref(db, `lobbies/${lobby.lobbyId}`), { stage: "game" });
-        update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
-          currentPlayerId: lobby.players[0].id,
-          status: "pick",
-          currentPair: [0, cards.truth, cards.dare],
-          pairs: pairs,
+        update(ref(db, `lobbies/${lobby.lobbyId}`), {
+          ...lobby,
+          stage: "game",
+          game: {
+            currentPlayerId: lobby.players[0].id,
+            status: "pick",
+            currentPair: [0, cards.truth, cards.dare],
+            pairs: pairs,
+          },
         });
       });
     } else console.log("Игра уже началась");
@@ -54,6 +58,11 @@ export const processAction = (action, actionKey, lobby, user) => {
         update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "true" });
       } else if (action.actionType.includes("DARE")) {
         console.log("Выбрали действие");
+        update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "dare" });
+      }
+    } else if (lobby.game.status === "true") {
+      if (action.actionType.includes("DARE")) {
+        console.log("Сменили правду на действие");
         update(ref(db, `lobbies/${lobby.lobbyId}/game`), { status: "dare" });
       }
     }
@@ -133,6 +142,7 @@ export const processAction = (action, actionKey, lobby, user) => {
                         status: "pick",
                         nextCurrentPlayerId: null,
                         approves: null,
+                        previousStatus: null,
                         currentPair: [nextCurrentPair, cards.truth, cards.dare],
                       });
                     });
@@ -151,6 +161,44 @@ export const processAction = (action, actionKey, lobby, user) => {
         );
       });
     }
+  } else if (action.actionType.includes("DELETE_USER")) {
+    console.log(
+      lobby.players.filter((player) => {
+        return player.id !== action.actionData.deleteUser;
+      })
+    );
+    let newPlayersList = lobby.players
+      .filter((player) => {
+        return player.id !== action.actionData.deleteUser;
+      })
+      .concat({
+        id: action.actionData.deleteUser,
+        role: "deleted",
+      });
+    console.log(newPlayersList);
+    update(ref(db, `lobbies/${lobby.lobbyId}`), {
+      players: newPlayersList,
+    }).then(() => {
+      get(child(ref(db), `lobbies/${lobby.lobbyId}/players`)).then((data) => {
+        if (data.exists()) {
+          if (
+            data.val().filter((player) => {
+              return player.role !== "deleted";
+            }).length < 2 &&
+            lobby.stage !== "wait"
+          ) {
+            update(ref(db, `lobbies/${lobby.lobbyId}`), {
+              stage: "end_no-user",
+              game: null,
+            });
+          }
+        }
+      });
+    });
+  } else if (action.actionType === "RESTART_GAME") {
+    update(ref(db, `lobbies/${lobby.lobbyId}`), {
+      stage: "wait",
+    });
   } else console.log(`Экшена ${action.actionType} не существует`);
 
   update(ref(db, `actions/${actionKey}`), {

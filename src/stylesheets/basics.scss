@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap");
+
 * {
   box-sizing: border-box;
 }
@@ -14,7 +16,7 @@ body {
   align-items: center;
   scrollbar-gutter: stable;
   overflow-x: hidden;
-  font-family: "Hauora", Helvetica, Arial, sans-serif;
+  font-family: "Manrope", Helvetica, Arial, sans-serif;
   font-weight: 400;
 }
 
@@ -23,8 +25,42 @@ a {
 }
 
 p {
+  font-family: "Manrope", Helvetica, Arial, sans-serif;
   line-height: 1.2;
 
+  &.Title-1 {
+    font-size: 32px;
+    font-weight: 500;
+  }
+
+  &.Title-2 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  &.Headline {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  &.Body-1 {
+    font-size: 18px;
+    font-weight: 400;
+  }
+
+  &.Body-2 {
+    font-size: 16px;
+    font-weight: 400;
+  }
+
+  &.link {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--blue-600);
+  }
+
+  /***/
   &.A_Title {
     font-weight: 500;
 
@@ -50,7 +86,7 @@ p {
       font-weight: 500;
     }
     &.small {
-      font-size: 16px;
+      font-size: 14px;
     }
   }
 

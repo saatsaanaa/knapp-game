@@ -28,6 +28,8 @@ const LoadingLobby = ({ children }) => {
       (data) => {
         if (data.exists()) {
           //Закидываем данные о лобби в стор
+          console.log("Данные с firebase:");
+          console.log(data.val());
           dispatch(
             initLobby({
               ...data.val(),

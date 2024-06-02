@@ -1,5 +1,5 @@
 .ModalWindow {
-  z-index: 1;
+  z-index: 5;
   position: fixed;
   top: 0;
   left: 0;
@@ -7,42 +7,195 @@
   height: 100vh;
   background-color: rgb(0 0 0 / 0.6);
 
-  display: grid;
-  gap: 40px;
-  grid-template-columns: repeat(12, 1fr);
+  display: flex;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
 
+  > form,
   > div {
-    grid-column: 5 / span 4;
-
     display: flex;
-    gap: 16px;
+    gap: 4px;
+    max-width: fit-content;
     flex-direction: column;
+    align-items: center;
     background-color: white;
-    padding: 24px 28px;
-    border-radius: 8px;
+    padding: 24px 40px 32px;
+    border-radius: 16px;
 
-    button {
+    p {
+      text-align: center;
+    }
+
+    .Title-1 {
+      margin-bottom: 18px;
+      line-height: 110%;
+    }
+
+    .Headline {
+      margin-bottom: 8px;
+    }
+
+    > form {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button-group,
+    > button:not(.copy) {
+      margin-top: 16px;
       align-self: center;
     }
 
-    form {
+    .button-group {
       display: flex;
-      flex-direction: column;
-      gap: 8px;
+      gap: 16px;
     }
 
     .DeckContainer {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
+      max-height: 60vh;
+      overflow-y: scroll;
+
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
 
       .Deck {
-        border-radius: 4px;
-        border: 2px solid rgb(190, 190, 190);
-        padding: 16px;
+        position: relative;
+        cursor: pointer;
+        border-radius: 16px;
+        border: 2px solid #eae4ff;
+
+        background: radial-gradient(
+          farthest-corner at 72% 10%,
+          rgb(102, 0, 255) 0%,
+          transparent 80%
+        );
+
+        .deck-background {
+          display: grid;
+          grid-template-columns: repeat(6, 1fr);
+          grid-template-rows: repeat(4, 1fr);
+
+          > div {
+            background: rgba($color: #6600ff, $alpha: 0.01);
+            backdrop-filter: blur(24px);
+            width: 38px;
+            height: 38px;
+
+            &.rectangle-1 {
+              grid-column-start: 4;
+            }
+
+            &.rectangle-2 {
+              grid-column-start: 2;
+            }
+
+            &.rectangle-4 {
+              grid-column-start: 6;
+            }
+
+            &.rectangle-6 {
+              grid-column-start: 4;
+            }
+
+            &.rectangle-8 {
+              grid-column-start: 3;
+            }
+          }
+        }
+
+        .deck-content {
+          position: absolute;
+          bottom: 18px;
+          left: 18px;
+        }
+
+        &:hover {
+        }
+
+        &.selected {
+          background: radial-gradient(
+              farthest-corner at 72% 10%,
+              transparent 0%,
+              rgb(102, 0, 255) 100%
+            ),
+            radial-gradient(
+              farthest-corner at 80% 37%,
+              rgb(223, 92, 74) 0%,
+              transparent 80%
+            );
+          color: #fff;
+          border: 2px solid #6600ff;
+        }
+      }
+    }
+
+    .modal-header {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+
+      svg {
+        cursor: pointer;
+      }
+    }
+
+    &:not(:has(div.modal-header)) {
+      padding-top: 32px;
+    }
+  }
+
+  p {
+    max-width: fit-content;
+  }
+
+  .copy {
+    margin-bottom: 16px;
+  }
+
+  input,
+  button {
+    min-width: 100%;
+  }
+
+  input {
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 1024px) {
+    width: 100vw;
+    padding: 20px;
+
+    > form,
+    > div {
+      width: 100%;
+      padding: 20px 24px 32px;
+
+      .DeckContainer {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+
+        .Deck {
+          .deck-background {
+            > div {
+              width: calc((100vw - 100px) / 6);
+              height: calc((100vw - 100px) / 6);
+            }
+            .deck-content {
+              width: calc(100vw - 132px);
+            }
+          }
+        }
       }
     }
   }

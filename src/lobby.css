@@ -4,7 +4,6 @@
 @import "stylesheets/basics.scss";
 
 /*Компоненты*/
-@import "stylesheets/O_Header.scss";
-@import "stylesheets/A_Button.scss";
+@import "stylesheets/deck.scss";
 
 @import "stylesheets/lobby.scss";

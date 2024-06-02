@@ -7,7 +7,16 @@ const lobbySlice = createSlice({
   },
   reducers: {
     initLobby(state, action) {
-      state.lobby = action.payload;
+      console.log(action.payload);
+      state.lobby = {
+        ...action.payload,
+        players: action.payload.players.filter((player) => {
+          return player.role !== "deleted";
+        }),
+        deletedPlayers: action.payload.players.filter((player) => {
+          return player.role === "deleted";
+        }),
+      };
       console.log("Создали лобби:");
       console.log(state.lobby);
     },

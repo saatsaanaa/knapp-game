@@ -2,5 +2,3 @@
 yarn-error.log
 /node_modules
 /dev_build
-/src/javascript/firebaseConfig.js
-/src/javascript/airtableConfig.js

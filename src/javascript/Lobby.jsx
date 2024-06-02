@@ -10,10 +10,10 @@ import { processAction } from "./processAction.jsx";
 
 import { createQueue } from "../store/gameSlice.js";
 
+/*Иконки */
+
 /*Компоненты*/
-import PlayersList from "./lobby-components/PlayersList/PlayersList.jsx";
-import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
-import GameProcess from "./lobby-components/GameProcess.jsx";
+import PlayersList from "./components/PlayersList/PlayersList.jsx";
 /**/
 import { sendAction } from "./sendAction.jsx";
 import Input from "./components/Input/Input.jsx";
@@ -21,6 +21,11 @@ import isUserExisting from "./utilities/isUserExisting.jsx";
 import LoadingLobby from "./utilities/LoadingLobby.jsx";
 import isCurrentPlayer from "./utilities/isCurrentPlayer.jsx";
 import HostPixel from "./utilities/HostPixel.jsx";
+import GameStatus from "./components/GameStatus/GameStatus.jsx";
+import { Link } from "lucide-react";
+import GameBoard from "./components/GameBoard/GameBoard.jsx";
+import Button from "./components/Button/Button.jsx";
+import ModalWindow from "./components/ModalWindow/ModalWindow.jsx";
 
 /**
  * ЛОББИ
@@ -30,6 +35,7 @@ const Lobby = () => {
     show: false,
     content: "Пусто",
   });
+
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
   const dispatch = useDispatch();
@@ -43,85 +49,91 @@ const Lobby = () => {
           ...lobby.players.filter((player) => {
             return player.id === userId;
           })[0],
-          isCurrentPlayer: isCurrentPlayer(lobby.stage),
+          isCurrentPlayer: isCurrentPlayer(lobby, userId),
         })
       );
     } else {
-      setModalWindow({
-        show: true,
-        content: (
-          <>
-            <p className="A_Title large">Присоединиться к лобби</p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const data = new FormData(e.target);
-                const formJson = Object.fromEntries(data.entries());
-                console.log(formJson);
-                sendAction(
-                  "JOIN_LOBBY",
-                  { lobbyId: queryString.parse(location.search).id },
-                  { id: userId, name: formJson.name }
-                );
-                setModalWindow({
-                  show: false,
-                  content: (
-                    <>
-                      <p className="A_Title medium">Добавляем вас в лобби</p>
-                    </>
-                  ),
-                });
-              }}
-            >
-              <p className="A_Paragraph large">Придумайте ник</p>
-              <input name="name" size="9" required></input>
+      if (
+        lobby.deletedPlayers.filter((player) => {
+          return player.id === userId;
+        }).length > 0
+      ) {
+        setModalWindow({
+          show: true,
+          content: (
+            <>
+              <p className="Title-1">Вас удалили из лобби</p>
+              <p className="Body-1">Вы больше не сможете присоединиться</p>
+            </>
+          ),
+        });
+      } else
+        setModalWindow({
+          show: true,
+          content: (
+            <>
+              <p className="Title-1">Присоединиться к лобби</p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const data = new FormData(e.target);
+                  const formJson = Object.fromEntries(data.entries());
+                  console.log(formJson);
+                  sendAction(
+                    "JOIN_LOBBY",
+                    { lobbyId: queryString.parse(location.search).id },
+                    { id: userId, name: formJson.name }
+                  );
+                  setModalWindow({
+                    show: false,
+                    content: <>{location.reload()}</>,
+                  });
+                }}
+              >
+                <p className="Headline">Придумайте ник</p>
+                <input name="name" size="9" required></input>
 
-              <button className="A_Button" type="submit">
-                Присоединиться
-              </button>
-            </form>
-          </>
-        ),
-      });
+                <button className="A_Button" type="submit">
+                  Присоединиться
+                </button>
+              </form>
+            </>
+          ),
+        });
     }
-  }, []);
+  }, [lobby]);
 
   return (
     <>
       <div className="Lobby">
         {modalWindow.show ? (
-          <div className="ModalWindow">
+          <ModalWindow>
             <div>{modalWindow.content}</div>
-          </div>
+          </ModalWindow>
         ) : (
           ""
         )}
-        <div className="GameBoard">kzkzkzk</div>
+        <GameBoard />
         <div className="LobbyInfo">
           <div className="Info">
-            <p>Lobby Id</p>
-            <p>Desk name</p>
-          </div>
-          <div className="GameStatus">
-            <p>Очень ждем всех участников ы апривет</p>
-            <p>Начать игру</p>
-          </div>
-          <div className="PlayersList">
-            <p>Участники</p>
+            <p className="Body-2">
+              Лобби #{queryString.parse(location.search).id}
+            </p>
 
-            {lobby.players.map((player) => {
-              return (
-                <div>
-                  <p>{player.name}</p>
-                </div>
-              );
-            })}
+            <p className="Body-2">Колода "Познакомимся?"</p>
           </div>
+          <GameStatus />
+          <PlayersList></PlayersList>
         </div>
         <div className="Menu">
-          <p>LOGO</p>
-          <p>Правила</p>
-          <p>Кнопка</p>
+          <div className="logo" />
+          <p className="link">Правила</p>
+          <Button
+            appearance={"neutral"}
+            onClick={() => (document.location.href = "../index.html")}
+          >
+            Покинуть игру
+          </Button>
         </div>
       </div>
       {user.role === "host" ? <HostPixel /> : console.log("Не хост")}

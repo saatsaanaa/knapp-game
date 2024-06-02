@@ -1,0 +1,72 @@
+.PlayersList {
+  position: absolute;
+  bottom: 32px;
+  width: 100%;
+
+  padding: 14px 16px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e4e4f6;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  .header {
+    padding: 0 0 4px;
+  }
+
+  div:not(.players-container) {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .PlayerItem {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .PlayerItem + .PlayerItem {
+    border-top: 2px solid #e4e4e4;
+  }
+
+  hr {
+    display: none;
+  }
+
+  @media (max-width: 1024px) {
+    order: 2;
+    position: static;
+    gap: 0;
+    padding: 14px 16px 8px;
+
+    .PlayerItem {
+      /*max-height: 0px;
+      overflow: hidden;
+      transition: all 0.4s linear;*/
+      padding: 8px 0;
+    }
+
+    .players-container {
+      max-height: 0px;
+      transition: all 0.8s linear;
+    }
+
+    &.open {
+      padding: 14px 16px 8px;
+
+      .players-container {
+        max-height: 500px;
+      }
+    }
+
+    hr {
+      display: block;
+      width: 20px;
+      border: 2px solid gray;
+      border-radius: 100px;
+    }
+  }
+}

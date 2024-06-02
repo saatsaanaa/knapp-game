@@ -1,0 +1,335 @@
+@property --x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 0%;
+}
+
+@property --c {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(102, 0, 255);
+}
+
+.GameBoard {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.wait-game {
+    flex-direction: column;
+
+    .Title-1 {
+      margin-bottom: 16px;
+    }
+    .Headline,
+    .Title-1 {
+      text-align: center;
+      vertical-align: center;
+      line-height: 100%;
+
+      span {
+        cursor: pointer;
+        color: #6600ff;
+      }
+
+      svg {
+        display: inline;
+        transform: translateY(25%);
+      }
+    }
+  }
+
+  &:has(.Card) {
+    background: #f7f8fc;
+    background: radial-gradient(closest-side, var(--c) var(--x), transparent);
+  }
+
+  &:has(.Card.truth.for-current-player.active:hover) {
+    animation: radialBackgroundChange-1 0.4s;
+    animation-fill-mode: forwards;
+  }
+
+  &:has(.Card.dare.for-current-player.active:hover) {
+    animation: radialBackgroundChange-2 0.4s;
+    animation-fill-mode: forwards;
+  }
+
+  &:has(.Card.for-current-player.truth.choosen) {
+    --x: 20%;
+    --c: rgb(17, 208, 163);
+  }
+
+  &:has(.Card.for-current-player.dare.choosen) {
+    --x: 20%;
+    --c: rgb(223, 92, 74);
+  }
+
+  .Card {
+    color: rgba($color: #fff, $alpha: 0.8);
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-radius: 16px;
+    width: 22vw;
+    height: 33vw;
+    max-width: 420px;
+    max-height: 630px;
+    background-color: rgba($color: #fff, $alpha: 0.1);
+    border: 2px solid rgba($color: #fff, $alpha: 0.2);
+    backdrop-filter: blur(16px);
+
+    transition: all 0.4s ease-out;
+
+    .Body-1 {
+      text-align: center;
+      width: 80%;
+    }
+
+    &.truth {
+      top: 50%;
+      left: 50%;
+      transform: translate(-100%, -50%) rotateZ(-15deg);
+    }
+
+    &.dare {
+      top: 50%;
+      right: 50%;
+      transform: translate(100%, -50%) rotateZ(15deg);
+    }
+
+    &.for-current-player {
+      background-color: rgba($color: #6600ff, $alpha: 0.4);
+      border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
+
+      &.active {
+        cursor: pointer;
+        color: #fff;
+
+        &.truth:hover {
+          z-index: 1;
+          background-color: rgba($color: #11d0a3, $alpha: 0.6);
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
+          transform: translate(-100%, -50%) rotateZ(-10deg) scale(1.1);
+        }
+
+        &.dare:hover {
+          z-index: 1;
+          background-color: rgba($color: #df5c4a, $alpha: 0.6);
+          border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
+          transform: translate(100%, -50%) rotateZ(10deg) scale(1.1);
+        }
+      }
+
+      &.choosen {
+        &.truth {
+          background-color: rgba($color: #11d0a3, $alpha: 0.6);
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
+
+          /*& + .Card.dare.for-current-player {
+            cursor: pointer;
+            transform: translate(25%, -50%) rotateZ(15deg);
+
+            &:hover {
+              
+            }
+          }*/
+        }
+
+        &.dare {
+          background-color: rgba($color: #df5c4a, $alpha: 0.6);
+          border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
+        }
+      }
+    }
+
+    &.choosen {
+      position: absolute;
+      z-index: 1;
+    }
+
+    &.truth.choosen {
+      transform: translate(-50%, -50%) rotateZ(0) scale(1.1);
+    }
+
+    &.dare.choosen {
+      transform: translate(50%, -50%) rotateZ(0) scale(1.1);
+    }
+  }
+
+  &:has(.Card.dare.choosen) {
+    .Card.truth {
+      background-color: rgba($color: #fff, $alpha: 0.1);
+      border: 2px solid rgba($color: #fff, $alpha: 0.2);
+      transform: translate(-50%, -50%) rotateZ(-15deg);
+    }
+  }
+
+  &:has(.Card.truth.choosen) {
+    .Card.dare {
+      background-color: rgba($color: #fff, $alpha: 0.1);
+      border: 2px solid rgba($color: #fff, $alpha: 0.2);
+      transform: translate(125%, -50%) rotateZ(15deg);
+    }
+    .Card.dare.for-current-player {
+      cursor: pointer;
+      background-color: rgba($color: #6600ff, $alpha: 0.4);
+      border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
+      transform: translate(125%, -50%) rotateZ(15deg);
+
+      &:hover {
+        transform: translate(150%, -50%) rotateZ(20deg);
+        background-color: rgba($color: #6600ff, $alpha: 0.6);
+        border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
+      }
+    }
+  }
+
+  .approves-container {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: absolute;
+    z-index: 2;
+    top: 32px;
+    left: 0;
+
+    .approve {
+      display: flex;
+      padding: 12px;
+      border-radius: 8px;
+      background-color: #fff;
+      border: 1px solid #e4e4f6;
+      max-width: fit-content;
+
+      animation: approve-appearance 0.4s;
+    }
+
+    @keyframes approve-appearance {
+      from {
+        opacity: 0;
+        transform: translateY(-10%);
+        background-color: #d6ffed;
+        border: 1px solid #71ffc1;
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(0);
+        background-color: #d6ffed;
+        border: 1px solid #71ffc1;
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+        background-color: #fff;
+        border: 1px solid #e4e4f6;
+      }
+    }
+  }
+
+  &.state-end {
+    gap: 16px;
+    flex-wrap: wrap;
+
+    /*----------Лоадер----------*/
+    .lucide-loader {
+      animation: loader-rotate 4s infinite linear;
+    }
+
+    @keyframes loader-rotate {
+      from {
+        transform: rotateZ(0);
+      }
+      to {
+        transform: rotateZ(360deg);
+      }
+    }
+  }
+
+  @media (max-width: 1024px) {
+    width: 100%;
+    height: calc(100% - 218px);
+    position: relative;
+
+    .Card {
+      position: absolute;
+      width: 54vw;
+      height: 81vw;
+
+      transition: all 0.4s ease-out;
+
+      .Body-1 {
+        width: 85%;
+      }
+
+      &.truth {
+        transform: rotateZ(-7deg);
+        top: 40px;
+        left: 20px;
+      }
+
+      &.dare {
+        transform: rotateZ(7deg);
+        bottom: 20px;
+        right: 20px;
+      }
+
+      &.for-current-player {
+        &.choosen {
+          &.truth {
+            & + .Card.dare.for-current-player {
+              transform: translateX(0) rotateZ(7deg);
+              bottom: 60px;
+              top: auto;
+            }
+          }
+        }
+      }
+
+      &.truth.choosen {
+        top: 60px;
+        left: 50%;
+        transform: translateX(-50%) scale(1.1);
+      }
+
+      &.dare.choosen {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    &:has(.dare.choosen) {
+      .truth {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateZ(-7deg);
+      }
+    }
+  }
+}
+
+@keyframes radialBackgroundChange-1 {
+  0% {
+    --x: 0%;
+    --c: rgb(102, 0, 255);
+  }
+  100% {
+    --x: 20%;
+    --c: rgb(17, 208, 163);
+  }
+}
+
+@keyframes radialBackgroundChange-2 {
+  0% {
+    --x: 0%;
+    --c: rgb(102, 0, 255);
+  }
+  100% {
+    --x: 20%;
+    --c: rgb(223, 92, 74);
+  }
+}
