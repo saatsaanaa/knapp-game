@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { sendAction } from "../../sendAction.jsx";
 
 import "./GameBoard.scss";
-import isApproveExisting from "../../utilities/isApproveExisting.jsx";
 import Deck from "../Deck.jsx";
 import ModalWindow from "../ModalWindow/ModalWindow.jsx";
 import Button from "../Button/Button.jsx";
