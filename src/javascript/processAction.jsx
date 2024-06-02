@@ -162,39 +162,241 @@ export const processAction = (action, actionKey, lobby, user) => {
       });
     }
   } else if (action.actionType.includes("DELETE_USER")) {
-    console.log(
-      lobby.players.filter((player) => {
-        return player.id !== action.actionData.deleteUser;
-      })
-    );
-    let newPlayersList = lobby.players
-      .filter((player) => {
-        return player.id !== action.actionData.deleteUser;
-      })
-      .concat({
-        id: action.actionData.deleteUser,
-        role: "deleted",
+    //
+    //
+    //----------Новый список игроков----------
+    let newPlayersList = lobby.players.map((player) => {
+      if (player.id === action.actionData.deleteUser) {
+        return { id: player.id, role: "deleted", bonuses: null, name: null };
+      } else {
+        return player;
+      }
+    });
+
+    //----------Новый стейдж игры----------
+    const newStage = () => {
+      if (
+        newPlayersList.filter((player) => {
+          return player.role !== "deleted";
+        }).length < 2 &&
+        lobby.stage === "game"
+      ) {
+        return "end_no-user";
+      } else return lobby.stage;
+    };
+
+    //----------Новый curPlayerId----------
+    const newCurrentPlayerId = () => {
+      if (newStage() !== "end_no-user") {
+        if (
+          lobby.game.status === "pick" ||
+          lobby.game.status === "true" ||
+          lobby.game.status === "dare"
+        ) {
+          if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
+            let index =
+              lobby.players.findIndex((player) => {
+                return player.id === lobby.game.currentPlayerId;
+              }) + 1;
+            if (lobby.players.length <= index) index = 0;
+
+            return lobby.players[index].id;
+          } else return lobby.game.currentPlayerId;
+        } else return lobby.game.currentPlayerId;
+      } else return null;
+    };
+
+    //----------Новый curPair----------
+    const newCurrentPair = () => {
+      if (newStage() !== "end_no-user") {
+        if (lobby.game.status === "true" || lobby.game.status === "dare") {
+          if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
+            const newPair = lobby.game.currentPair[0] + 1;
+            if (newPair < 8) {
+              getCardPair(
+                lobby.game.pairs[newPair][0],
+                lobby.game.pairs[newPair][1]
+              ).then((cards) => {
+                console.log([newPair, cards.truth, cards.dare]);
+                return [newPair, cards.truth, cards.dare];
+              });
+            }
+          } else return lobby.game.currentPair;
+        } else return lobby.game.currentPair;
+      } else return null;
+    };
+
+    //----------Новый статус игры----------
+    const newGameStatus = () => {
+      if (newStage() !== "end_no-user") {
+        if (lobby.game.status === "true" || lobby.game.status === "dare") {
+          if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
+            return "pick";
+          } else return lobby.game.status;
+        } else return lobby.game.status;
+      } else return null;
+    };
+
+    if (newStage() === "end_no-user") {
+      update(ref(db, `lobbies/${lobby.lobbyId}`), {
+        players: newPlayersList,
+        stage: "end_no-user",
+        game: null,
       });
-    console.log(newPlayersList);
-    update(ref(db, `lobbies/${lobby.lobbyId}`), {
-      players: newPlayersList,
-    }).then(() => {
-      get(child(ref(db), `lobbies/${lobby.lobbyId}/players`)).then((data) => {
-        if (data.exists()) {
-          if (
-            data.val().filter((player) => {
-              return player.role !== "deleted";
-            }).length < 2 &&
-            lobby.stage !== "wait"
-          ) {
-            update(ref(db, `lobbies/${lobby.lobbyId}`), {
-              stage: "end_no-user",
-              game: null,
+    } else if (lobby.stage === "game") {
+      if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
+        if (lobby.game.status === "true" || lobby.game.status === "dare") {
+          const newPair = lobby.game.currentPair[0] + 1;
+          if (newPair < 8) {
+            getCardPair(
+              lobby.game.pairs[newPair][0],
+              lobby.game.pairs[newPair][1]
+            ).then((cards) => {
+              console.log([newPair, cards.truth, cards.dare]);
+              update(ref(db, `lobbies/${lobby.lobbyId}`), {
+                players: newPlayersList,
+                game: {
+                  ...lobby.game,
+                  status: newGameStatus(),
+                  currentPlayerId: newCurrentPlayerId(),
+                  currentPair: [newPair, cards.truth, cards.dare],
+                },
+              });
             });
           }
+        } else {
+          update(ref(db, `lobbies/${lobby.lobbyId}`), {
+            players: newPlayersList,
+            game: {
+              ...lobby.game,
+              currentPlayerId: newCurrentPlayerId(),
+            },
+          });
         }
-      });
-    });
+      } else
+        update(ref(db, `lobbies/${lobby.lobbyId}`), {
+          players: newPlayersList,
+        });
+    }
+
+    console.log(newPlayersList);
+
+    console.log(newStage());
+
+    console.log(newCurrentPlayerId());
+
+    console.log(newCurrentPair());
+
+    console.log(newGameStatus());
+
+    /*update(ref(db, `lobbies/${lobby.lobbyId}`), { ...newPlayersList }).then(
+      () => {
+        console.log("Обновил список игроков");
+
+        get(child(ref(db), `lobbies/${lobby.lobbyId}/players`)).then((data) => {
+          if (data.exists()) {
+            if (
+              data.val().filter((player) => {
+                return player.role !== "deleted";
+              }).length < 2
+            ) {
+              update(ref(db, `lobbies/${lobby.lobbyId}`), {
+                stage: "end_no-user",
+                game: null,
+              });
+            } else if (lobby.stage === "game") {
+              //
+              //
+              //Если сейчас статус игры -- выбор карты
+              if (lobby.game.status === "pick") {
+                //И ходит игрок, которого хотят удалить
+                if (
+                  lobby.game.currentPlayerId === action.actionData.deleteUser
+                ) {
+                  //
+                  //Обновляем айди игрока, который ходит
+                  let index =
+                    lobby.players.findIndex((player) => {
+                      return player.id === lobby.game.currentPlayerId;
+                    }) + 1;
+                  if (lobby.players.length <= index) index = 0;
+
+                  //
+                  //Отправляем айди нового curPlayer
+                  update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
+                    currentPlayerId: lobby.players[index].id,
+                  });
+                }
+              }
+              // Если карта уже выбрана
+              else if (
+                lobby.game.status === "true" ||
+                lobby.game.status === "dare"
+              ) {
+                //И ходит игрок, которого хотят удалить
+                if (
+                  lobby.game.currentPlayerId === action.actionData.deleteUser
+                ) {
+                  //
+                  //Обновляем айди игрока, который ходит
+                  let index =
+                    lobby.players.findIndex((player) => {
+                      return player.id === lobby.game.currentPlayerId;
+                    }) + 1;
+                  if (lobby.players.length <= index) index = 0;
+
+                  //
+                  //Выбираем следующую пару
+                  const newCurrentPair = lobby.game.currentPair[0] + 1;
+                  if (newCurrentPair < 8) {
+                    getCardPair(
+                      lobby.game.pairs[newCurrentPair][0],
+                      lobby.game.pairs[newCurrentPair][1]
+                    ).then((cards) => {
+                      //Отправляем новые данные об игре
+                      update(ref(db, `lobbies/${lobby.lobbyId}/game`), {
+                        currentPlayerId: lobby.players[index].id,
+                        currentPair: [newCurrentPair, cards.truth, cards.dare],
+                        status: "pick",
+                      });
+                    });
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    );*/
+
+    /*
+        if (lobby.game.status === "true" || lobby.game.status === "dare") {
+          const newCurrentPair = lobby.game.currentPair[0] + 1;
+          let currentPair;
+
+          if (newCurrentPair < 8) {
+            getCardPair(
+              lobby.game.pairs[newCurrentPair][0],
+              lobby.game.pairs[newCurrentPair][1]
+            ).then((cards) => {
+              currentPair = [newCurrentPair, cards.truth, cards.dare];
+              newData = {
+                ...newData,
+                game: {
+                  currentPlayerId: newData.game.currentPlayerId,
+                  approves: null,
+                  status: "pick",
+                  currentPair: currentPair,
+                },
+              };
+              update(ref(db, `lobbies/${lobby.lobbyId}`), { ...newData });
+            });
+          }
+        } else update(ref(db, `lobbies/${lobby.lobbyId}`), { ...newData });
+      }
+    }*/
+
+    /*update(ref(db, `lobbies/${lobby.lobbyId}`), newData);*/
   } else if (action.actionType === "RESTART_GAME") {
     update(ref(db, `lobbies/${lobby.lobbyId}`), {
       stage: "wait",

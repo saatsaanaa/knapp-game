@@ -62,8 +62,6 @@ const GameStatus = () => {
             <p className="Title-2">
               <span>Ваш ход</span>
             </p>
-
-            <Button disabled={true}>Передать ход</Button>
           </div>
         );
       } else if (lobby.game.status == "PASS_TURN") {
@@ -130,12 +128,18 @@ const GameStatus = () => {
       );
     }
   } else if (lobby.stage === "end") {
-    return (<div className="GameStatus">
-      <div className="status-container">
-        <p className="Title-2">Колода закончилась</p>
-        <p className="Body-2">{user.role === "host" ? 'Вы можете продолжить игру, выбрав другую' : "Хост принимает решение о продолжении игры"}</p>
+    return (
+      <div className="GameStatus">
+        <div className="status-container">
+          <p className="Title-2">Колода закончилась</p>
+          <p className="Body-2">
+            {user.role === "host"
+              ? "Вы можете продолжить игру, выбрав другую"
+              : "Хост принимает решение о продолжении игры"}
+          </p>
+        </div>
       </div>
-      </div>)
+    );
   }
 };
 
