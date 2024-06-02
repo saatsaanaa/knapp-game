@@ -51,10 +51,6 @@ const PlayersList = () => {
                       )}
                 </p>
               </div>
-              <div>
-                <p className="Body-2">Бонус смены вопроса</p>
-                <p className="Body-2 blue">x{player.bonuses}</p>
-              </div>
             </div>
           ))}
         </div>

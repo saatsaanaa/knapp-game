@@ -51,8 +51,9 @@
     }
 
     .button-group {
-      display: flex;
+      display: grid;
       gap: 16px;
+      grid-template-columns: repeat(2, 1fr);
     }
 
     .DeckContainer {
@@ -165,6 +166,14 @@
   input,
   button {
     min-width: 100%;
+  }
+
+  .button-group {
+    min-width: 100%;
+
+    button {
+      min-width: 100%;
+    }
   }
 
   input {
