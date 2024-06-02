@@ -8,37 +8,56 @@
   background-color: rgb(0 0 0 / 0.6);
 
   display: flex;
-  gap: 40px;
   align-items: center;
   justify-content: center;
   backdrop-filter: blur(5px);
 
-  > div {
-    > form {
-      display: flex;
-      gap: 8px;
-      flex-direction: column;
-      justify-content: center;
-    }
-  }
-
   > form,
   > div {
     display: flex;
-    width: 800px;
-    gap: 16px;
+    gap: 4px;
+    max-width: fit-content;
     flex-direction: column;
+    align-items: center;
     background-color: white;
-    padding: 24px 28px;
-    border-radius: 8px;
+    padding: 24px 40px 32px;
+    border-radius: 16px;
 
-    button {
+    p {
+      text-align: center;
+    }
+
+    .Title-1 {
+      margin-bottom: 18px;
+      line-height: 110%;
+    }
+
+    .Headline {
+      margin-bottom: 8px;
+    }
+
+    > form {
+      display: flex;
+      width: 100%;
+      gap: 8px;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button-group,
+    > button:not(.copy) {
+      margin-top: 16px;
       align-self: center;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 16px;
     }
 
     .DeckContainer {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
       max-height: 60vh;
       overflow-y: scroll;
@@ -119,15 +138,47 @@
         }
       }
     }
+
+    .modal-header {
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+
+      svg {
+        cursor: pointer;
+      }
+    }
+
+    &:not(:has(div.modal-header)) {
+      padding-top: 32px;
+    }
+  }
+
+  p {
+    max-width: fit-content;
+  }
+
+  .copy {
+    margin-bottom: 16px;
+  }
+
+  input,
+  button {
+    min-width: 100%;
+  }
+
+  input {
+    margin-bottom: 16px;
   }
 
   @media (max-width: 1024px) {
     width: 100vw;
     padding: 20px;
 
-    > form {
+    > form,
+    > div {
       width: 100%;
-      gap: 16px;
+      padding: 20px 24px 32px;
 
       .DeckContainer {
         display: grid;
@@ -140,12 +191,11 @@
               width: calc((100vw - 100px) / 6);
               height: calc((100vw - 100px) / 6);
             }
-          .deck-content {
-            width: calc(100vw - 132px);
-          }
+            .deck-content {
+              width: calc(100vw - 132px);
+            }
           }
         }
-
       }
     }
   }

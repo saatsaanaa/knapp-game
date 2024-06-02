@@ -20,6 +20,7 @@ export const processAction = (action, actionKey, lobby, user) => {
           id: action.actionData.id,
           name: action.actionData.name,
           role: "player",
+          bonuses: 0,
         }
       );
     } else console.log("Такой юзер сущесвует");
@@ -160,6 +161,44 @@ export const processAction = (action, actionKey, lobby, user) => {
         );
       });
     }
+  } else if (action.actionType.includes("DELETE_USER")) {
+    console.log(
+      lobby.players.filter((player) => {
+        return player.id !== action.actionData.deleteUser;
+      })
+    );
+    let newPlayersList = lobby.players
+      .filter((player) => {
+        return player.id !== action.actionData.deleteUser;
+      })
+      .concat({
+        id: action.actionData.deleteUser,
+        role: "deleted",
+      });
+    console.log(newPlayersList);
+    update(ref(db, `lobbies/${lobby.lobbyId}`), {
+      players: newPlayersList,
+    }).then(() => {
+      get(child(ref(db), `lobbies/${lobby.lobbyId}/players`)).then((data) => {
+        if (data.exists()) {
+          if (
+            data.val().filter((player) => {
+              return player.role !== "deleted";
+            }).length < 2 &&
+            lobby.stage !== "wait"
+          ) {
+            update(ref(db, `lobbies/${lobby.lobbyId}`), {
+              stage: "end_no-user",
+              game: null,
+            });
+          }
+        }
+      });
+    });
+  } else if (action.actionType === "RESTART_GAME") {
+    update(ref(db, `lobbies/${lobby.lobbyId}`), {
+      stage: "wait",
+    });
   } else console.log(`Экшена ${action.actionType} не существует`);
 
   update(ref(db, `actions/${actionKey}`), {

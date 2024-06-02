@@ -1,51 +1,113 @@
+@property --x-1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 75%;
+}
+
+@property --y-1 {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 10%;
+}
+
+@property --scnd-gr {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: rgb(223, 92, 74 / 0);
+}
+
 .deck {
-    position: relative;
-    cursor: pointer;
-    border-radius: 16px;
-    border: 2px solid #eae4ff;
+  position: relative;
+  cursor: pointer;
+  border-radius: 16px;
+  border: 2px solid #eae4ff;
 
-    background: radial-gradient(
-      farthest-corner at 72% 10%,
+  background: radial-gradient(
+      farthest-corner at var(--x-1) var(--y-1),
       rgb(102, 0, 255) 0%,
-      transparent 80%
+      rgba(255, 255, 255, 0) 80%
+    ),
+    radial-gradient(
+      farthest-corner at 80% 37%,
+      var(--scnd-gr) 0%,
+      rgba(255, 255, 255, 0) 80%
     );
+  transition: all 0.4s ease-out;
 
-    .deck-background {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      grid-template-rows: repeat(4, 1fr);
+  .deck-background {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(4, 1fr);
 
-      > div {
-        background: rgba($color: #6600ff, $alpha: 0.01);
-        backdrop-filter: blur(24px);
-        width: 50px;
-        height: 50px;
+    > div {
+      background: rgba($color: #6600ff, $alpha: 0.01);
+      backdrop-filter: blur(24px);
+      width: 50px;
+      height: 50px;
 
-        &.rectangle-1 {
-          grid-column-start: 4;
-        }
+      &.rectangle-1 {
+        grid-column-start: 4;
+      }
 
-        &.rectangle-2 {
-          grid-column-start: 2;
-        }
+      &.rectangle-2 {
+        grid-column-start: 2;
+      }
 
-        &.rectangle-4 {
-          grid-column-start: 6;
-        }
+      &.rectangle-4 {
+        grid-column-start: 6;
+      }
 
-        &.rectangle-6 {
-          grid-column-start: 4;
-        }
+      &.rectangle-6 {
+        grid-column-start: 4;
+      }
 
-        &.rectangle-8 {
-          grid-column-start: 3;
-        }
+      &.rectangle-8 {
+        grid-column-start: 3;
       }
     }
+  }
 
-    .deck-content {
-      position: absolute;
-      bottom: 18px;
-      left: 18px;
+  .deck-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    width: calc(100% - 40px);
+  }
+
+  &:hover {
+    animation: deck-hover 0.8s forwards;
+  }
+
+  &.selected {
+    color: #fff;
+    border: 2px solid #6600ff;
+
+    animation: deck-selected 0.8s forwards;
+  }
+
+  @media (max-width: 1024px) {
+    .deck-background > div {
+      width: calc((100vw - 100px) / 6);
+      height: calc((100vw - 100px) / 6);
     }
+  }
+
+  @keyframes deck-hover {
+    to {
+      --x-1: 20%;
+      --y-1: 15%;
+    }
+  }
+
+  @keyframes deck-selected {
+    from {
+      --x-1: 20%;
+      --y-1: 15%;
+    }
+    to {
+      --scnd-gr: rgb(223, 92, 74 / 100%);
+      --x-1: 20%;
+      --y-1: 80%;
+    }
+  }
 }

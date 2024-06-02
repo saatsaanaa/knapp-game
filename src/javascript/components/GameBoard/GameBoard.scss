@@ -10,23 +10,35 @@
   initial-value: rgb(102, 0, 255);
 }
 
-@property --gb-st-end {
-  syntax: "<percentage>";
-  inherits: false;
-  initial-value: 0%;
-}
-
-/*@property --c {
-  syntax: "<color>";
-  inherits: false;
-  initial-value: rgb(102, 0, 255);
-}*/
-
 .GameBoard {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  &.wait-game {
+    flex-direction: column;
+
+    .Title-1 {
+      margin-bottom: 16px;
+    }
+    .Headline,
+    .Title-1 {
+      text-align: center;
+      vertical-align: center;
+      line-height: 100%;
+
+      span {
+        cursor: pointer;
+        color: #6600ff;
+      }
+
+      svg {
+        display: inline;
+        transform: translateY(25%);
+      }
+    }
+  }
 
   &:has(.Card) {
     background: #f7f8fc;
@@ -55,6 +67,7 @@
 
   .Card {
     color: rgba($color: #fff, $alpha: 0.8);
+    position: absolute;
 
     display: flex;
     justify-content: center;
@@ -77,11 +90,15 @@
     }
 
     &.truth {
-      transform: rotateZ(-15deg);
+      top: 50%;
+      left: 50%;
+      transform: translate(-100%, -50%) rotateZ(-15deg);
     }
 
     &.dare {
-      transform: rotateZ(15deg);
+      top: 50%;
+      right: 50%;
+      transform: translate(100%, -50%) rotateZ(15deg);
     }
 
     &.for-current-player {
@@ -96,14 +113,14 @@
           z-index: 1;
           background-color: rgba($color: #11d0a3, $alpha: 0.6);
           border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
-          transform: rotateZ(-10deg) scale(1.1);
+          transform: translate(-100%, -50%) rotateZ(-10deg) scale(1.1);
         }
 
         &.dare:hover {
           z-index: 1;
           background-color: rgba($color: #df5c4a, $alpha: 0.6);
           border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
-          transform: rotateZ(10deg) scale(1.1);
+          transform: translate(100%, -50%) rotateZ(10deg) scale(1.1);
         }
       }
 
@@ -112,16 +129,14 @@
           background-color: rgba($color: #11d0a3, $alpha: 0.6);
           border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
 
-          & + .Card.dare.for-current-player {
+          /*& + .Card.dare.for-current-player {
             cursor: pointer;
-            transform: translateX(50%) rotateZ(15deg);
+            transform: translate(25%, -50%) rotateZ(15deg);
 
             &:hover {
-              transform: translateX(80%) rotateZ(20deg);
-              background-color: rgba($color: #6600ff, $alpha: 0.6);
-              border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
+              
             }
-          }
+          }*/
         }
 
         &.dare {
@@ -133,15 +148,43 @@
 
     &.choosen {
       position: absolute;
-      transform: rotateZ(0) scale(1.1);
       z-index: 1;
+    }
+
+    &.truth.choosen {
+      transform: translate(-50%, -50%) rotateZ(0) scale(1.1);
+    }
+
+    &.dare.choosen {
+      transform: translate(50%, -50%) rotateZ(0) scale(1.1);
     }
   }
 
-  &:has(.Card.for-current-player.dare.choosen) {
-    .Card.truth.for-current-player {
+  &:has(.Card.dare.choosen) {
+    .Card.truth {
       background-color: rgba($color: #fff, $alpha: 0.1);
       border: 2px solid rgba($color: #fff, $alpha: 0.2);
+      transform: translate(-50%, -50%) rotateZ(-15deg);
+    }
+  }
+
+  &:has(.Card.truth.choosen) {
+    .Card.dare {
+      background-color: rgba($color: #fff, $alpha: 0.1);
+      border: 2px solid rgba($color: #fff, $alpha: 0.2);
+      transform: translate(125%, -50%) rotateZ(15deg);
+    }
+    .Card.dare.for-current-player {
+      cursor: pointer;
+      background-color: rgba($color: #6600ff, $alpha: 0.4);
+      border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
+      transform: translate(125%, -50%) rotateZ(15deg);
+
+      &:hover {
+        transform: translate(150%, -50%) rotateZ(20deg);
+        background-color: rgba($color: #6600ff, $alpha: 0.6);
+        border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
+      }
     }
   }
 
@@ -240,6 +283,7 @@
             & + .Card.dare.for-current-player {
               transform: translateX(0) rotateZ(7deg);
               bottom: 60px;
+              top: auto;
             }
           }
         }

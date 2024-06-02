@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 import Cookies from "js-cookie";
 
 import { db } from "./firebaseConfig.js";
-import { ref, child, push, update } from "firebase/database";
+import { ref, child, push, update, set } from "firebase/database";
 
-import { Copy } from "lucide-react";
+import { Copy, X } from "lucide-react";
 
 import Button from "./components/Button/Button.jsx";
 import Logo from "../imgs/knapp-logo.svg";
 import ModalWindow from "./components/ModalWindow/ModalWindow.jsx";
 import Input from "./components/Input/Input.jsx";
+import Deck from "./components/Deck.jsx";
 
 const Header = () => {
   Cookies.get("id") !== undefined
@@ -79,7 +80,15 @@ const Header = () => {
 
       {modalWindow.show && (
         <ModalWindow>
-          <CreateLobbyModalWindow decksList={decksList} />
+          <CreateLobbyModalWindow
+            decksList={decksList}
+            onClose={() =>
+              setModalWindow({
+                show: false,
+                content: "Пусто",
+              })
+            }
+          />
         </ModalWindow>
       )}
     </>
@@ -94,40 +103,37 @@ export default Header;
  * МОДАЛЬНОЕ ОКНО СОЗДАНИЯ ИГРЫ
  */
 
-export const CreateLobbyModalWindow = ({ decksList }) => {
+export const CreateLobbyModalWindow = ({ decksList, onClose }) => {
   const [selectedDeck, setSelectedDeck] = useState(0);
   const [deckSelected, setDeckSelected] = useState(false);
+  const [linkCopied, setLinkCopied] = useState(false);
 
-  const newLobbyKey = push(child(ref(db), "lobbies")).key;
+  const newLobbyKey = useMemo(() => push(child(ref(db), "lobbies")).key, [db]);
   console.log(newLobbyKey);
 
   if (!deckSelected) {
     return (
       <form>
+        <div className="modal-header">
+          <X onClick={() => onClose()} size={32} />
+        </div>
         <p className="Title-1">Создаем лобби</p>
         <p className="Headline">Выберите колоду</p>
         <div className="DeckContainer">
-          {decksList.map((deck) => {
+          {decksList.map((deck, index) => {
             return (
-              <div
-                className={`Deck${selectedDeck == deck.id ? " selected" : ""}`}
-                key={deck.id}
+              <Deck
+                key={index}
+                isSelected={selectedDeck === deck.id ? true : false}
                 onClick={() => {
-                  console.log("Привет");
                   setSelectedDeck(deck.id);
                   console.log(selectedDeck);
                 }}
               >
-                <div className="deck-background">
-                  {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
-                    <div className={"rectangle-" + n}></div>
-                  ))}
-                </div>
-                <div className="deck-content">
-                  <p className="Headline">{deck.name}</p>
-                  <p className="Body-1">{deck.description}</p>
-                </div>
-              </div>
+                {console.log(selectedDeck)}
+                <p className="Headline">{deck.name}</p>
+                <p className="Body-1">{deck.description}</p>
+              </Deck>
             );
           })}
         </div>
@@ -158,6 +164,7 @@ export const CreateLobbyModalWindow = ({ decksList }) => {
                 name: playerName,
                 id: Cookies.get("id"),
                 role: "host",
+                bonuses: 0,
               },
             ],
           }).then(() => {
@@ -165,23 +172,29 @@ export const CreateLobbyModalWindow = ({ decksList }) => {
           });
         }}
       >
-        <p className="A_Title large">Пригласить игроков</p>
-        <p className="A_Paragraph large">Ссылка-приглашение</p>
+        <p className="Title-1">Пригласить игроков</p>
+        <p className="Headline">Ссылка-приглашение</p>
         <Button
-          appearance="copy"
+          appearance={!linkCopied ? "copy" : "copy success"}
           onClick={() => {
             navigator.clipboard
               .writeText(
-                window.location.href + "/pages/lobby.html?id=" + newLobbyKey
+                window.location.href + "pages/lobby.html?id=" + newLobbyKey
               )
-              .then(() => console.log("Done!"))
+              .then(() => {
+                console.log("Done!");
+                setLinkCopied(true);
+                setTimeout(() => {
+                  setLinkCopied(false);
+                }, 1000);
+              })
               .catch((err) => console.error(err));
           }}
         >
-          {window.location.href + "pages/lobby.html?id=" + newLobbyKey}
+          {!linkCopied ? "lobby" + newLobbyKey : "Ссылка успешно скопирована"}
           <Copy />
         </Button>
-        <p className="A_Paragraph large">Придумайте себе ник</p>
+        <p className="Headline">Придумайте себе ник</p>
         <Input name={"name"} required={true} maxLength="10">
           Например: Енот228
         </Input>

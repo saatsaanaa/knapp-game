@@ -14,8 +14,6 @@ import { createQueue } from "../store/gameSlice.js";
 
 /*Компоненты*/
 import PlayersList from "./components/PlayersList/PlayersList.jsx";
-import GameStatusBar from "./lobby-components/GameStatusBar/GameStatusBar.jsx";
-import GameProcess from "./lobby-components/GameProcess.jsx";
 /**/
 import { sendAction } from "./sendAction.jsx";
 import Input from "./components/Input/Input.jsx";
@@ -55,38 +53,53 @@ const Lobby = () => {
         })
       );
     } else {
-      setModalWindow({
-        show: true,
-        content: (
-          <>
-            <p className="A_Title large">Присоединиться к лобби</p>
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                const data = new FormData(e.target);
-                const formJson = Object.fromEntries(data.entries());
-                console.log(formJson);
-                sendAction(
-                  "JOIN_LOBBY",
-                  { lobbyId: queryString.parse(location.search).id },
-                  { id: userId, name: formJson.name }
-                );
-                setModalWindow({
-                  show: false,
-                  content: <>{location.reload()}</>,
-                });
-              }}
-            >
-              <p className="A_Paragraph large">Придумайте ник</p>
-              <input name="name" size="9" required></input>
+      if (
+        lobby.deletedPlayers.filter((player) => {
+          return player.id === userId;
+        }).length > 0
+      ) {
+        setModalWindow({
+          show: true,
+          content: (
+            <>
+              <p className="Title-1">Вас удалили из лобби</p>
+              <p className="Body-1">Вы больше не сможете присоединиться</p>
+            </>
+          ),
+        });
+      } else
+        setModalWindow({
+          show: true,
+          content: (
+            <>
+              <p className="Title-1">Присоединиться к лобби</p>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  const data = new FormData(e.target);
+                  const formJson = Object.fromEntries(data.entries());
+                  console.log(formJson);
+                  sendAction(
+                    "JOIN_LOBBY",
+                    { lobbyId: queryString.parse(location.search).id },
+                    { id: userId, name: formJson.name }
+                  );
+                  setModalWindow({
+                    show: false,
+                    content: <>{location.reload()}</>,
+                  });
+                }}
+              >
+                <p className="Headline">Придумайте ник</p>
+                <input name="name" size="9" required></input>
 
-              <button className="A_Button" type="submit">
-                Присоединиться
-              </button>
-            </form>
-          </>
-        ),
-      });
+                <button className="A_Button" type="submit">
+                  Присоединиться
+                </button>
+              </form>
+            </>
+          ),
+        });
     }
   }, [lobby]);
 
@@ -103,12 +116,10 @@ const Lobby = () => {
         <GameBoard />
         <div className="LobbyInfo">
           <div className="Info">
-            <div className="lobby-link">
-              <p className="link">
-                Лобби #{queryString.parse(location.search).id}
-              </p>
-              <Link size={18} color="#2a1efb" />
-            </div>
+            <p className="Body-2">
+              Лобби #{queryString.parse(location.search).id}
+            </p>
+
             <p className="Body-2">Колода "Познакомимся?"</p>
           </div>
           <GameStatus />
@@ -117,7 +128,12 @@ const Lobby = () => {
         <div className="Menu">
           <div className="logo" />
           <p className="link">Правила</p>
-          <Button>Покинуть игру</Button>
+          <Button
+            appearance={"neutral"}
+            onClick={() => (document.location.href = "../index.html")}
+          >
+            Покинуть игру
+          </Button>
         </div>
       </div>
       {user.role === "host" ? <HostPixel /> : console.log("Не хост")}

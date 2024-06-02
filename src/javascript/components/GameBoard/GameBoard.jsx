@@ -1,30 +1,38 @@
 import { Link, Loader } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 
 import { useSelector } from "react-redux";
 import { sendAction } from "../../sendAction.jsx";
 
 import "./GameBoard.scss";
 import isApproveExisting from "../../utilities/isApproveExisting.jsx";
+import Deck from "../Deck.jsx";
+import ModalWindow from "../ModalWindow/ModalWindow.jsx";
+import Button from "../Button/Button.jsx";
 
 const GameBoard = () => {
   const lobby = useSelector((state) => state.lobby.lobby);
   const user = useSelector((state) => state.user.user);
 
-  function cardState() {
-    if (user.isCurrentPlayer) {
-      return "Card active";
-    } else {
-      return "Card";
-    }
-  }
-
   if (lobby.stage === "wait") {
     return (
-      <div className="GameBoard">
+      <div className="GameBoard wait-game">
+        <p className="Title-1">Пригласите других игроков</p>
         <p className="Headline">
-          Пригласите других игроков, <br /> отправив им ссылку-приглашение
-          <Link />
+          Они могут присоединиться <br /> по{" "}
+          <span
+            onClick={() => {
+              navigator.clipboard
+                .writeText(window.location.href)
+                .then(() => {
+                  console.log(window.location.href);
+                })
+                .catch((err) => console.error(err));
+            }}
+          >
+            ссылке-приглашению
+            <Link />
+          </span>
         </p>
       </div>
     );
@@ -97,48 +105,63 @@ const GameBoard = () => {
   } else if (lobby.stage === "end") {
     return (
       <div className="GameBoard state-end">
-        {user.role === "host" ? <>
-          {[
-            {
-              name: 'Колода 1', 
-              description: 'Какая-то колодв'
-            },
-            {
-              name: 'Колода 2', 
-              description: 'Какая-то колодв'
-            },
-            {
-              name: 'Колода 3', 
-              description: 'Какая-то колодв'
-            }
-          ].map((deck, index) => <Deck>
-              <>
-                <p key={index} className="Headline">{deck.name}</p>
-                <p className="Body-1">{deck.description}</p>
-              </> 
-            </Deck>)}</> : <Loader color={'#6600ff'} size={50}/>}
+        {user.role === "host" ? (
+          <>
+            {[
+              {
+                name: "Колода 1",
+                description: "Какая-то колодв",
+              },
+              {
+                name: "Колода 2",
+                description: "Какая-то колодв",
+              },
+              {
+                name: "Колода 3",
+                description: "Какая-то колодв",
+              },
+            ].map((deck, index) => (
+              <Deck>
+                <>
+                  <p key={index} className="Headline">
+                    {deck.name}
+                  </p>
+                  <p className="Body-1">{deck.description}</p>
+                </>
+              </Deck>
+            ))}
+          </>
+        ) : (
+          <Loader color={"#6600ff"} size={50} />
+        )}
       </div>
-    )
+    );
+  } else if (lobby.stage === "end_no-user") {
+    return (
+      <>
+        <div className="GameBoard"></div>
+        {user.role === "host" && (
+          <ModalWindow>
+            <div>
+              <p className="Title-1">Вы удалили всех игроков</p>
+              <p className="Body-1">Игра автоматически завершилась</p>
+              <div className="button-group">
+                <Button
+                  onClick={() => (document.location.href = "../index.html")}
+                  appearance={"negative"}
+                >
+                  Покинуть лобби
+                </Button>
+                <Button onClick={() => sendAction("RESTART_GAME", lobby, user)}>
+                  Начать заново
+                </Button>
+              </div>
+            </div>
+          </ModalWindow>
+        )}
+      </>
+    );
   }
 };
 
 export default GameBoard;
-
-export const Deck = ({children}) => {
-  return (
-    <div
-      className={`deck`}
-      onClick={() => {
-      }}
-    >
-      <div className="deck-background">
-        {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((n) => (
-          <div className={"rectangle-" + n}></div>
-        ))}
-      </div>
-      <div className="deck-content">
-        {children}
-      </div>
-    </div>
-  )
-}

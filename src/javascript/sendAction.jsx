@@ -67,6 +67,12 @@ export const sendAction = (actionType, lobby, user) => {
      *
      * Если не опознали экшен
      */
+  } else if (actionType.includes("DELETE_USER")) {
+    actionData = {
+      deleteUser: actionType.replace("DELETE_USER_", ""),
+    };
+  } else if (actionType === "RESTART_GAME") {
+    actionData = {};
   } else console.log(`Экшена ${actionType} не существует`);
 
   update(ref(db, `actions/${newActionKey}`), {
