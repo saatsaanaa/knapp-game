@@ -52,8 +52,6 @@ const GameStatus = () => {
               </p>
               <p className="Body-2">Вы можете поменять правду на действие</p>
             </div>
-
-            <Button disabled={true}>Передать ход</Button>
           </div>
         );
       } else if (lobby.game.status === "dare") {

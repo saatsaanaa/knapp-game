@@ -277,7 +277,10 @@ export const processAction = (action, actionKey, lobby, user) => {
         update(ref(db, `lobbies/${lobby.lobbyId}`), {
           players: newPlayersList,
         });
-    }
+    } else
+      update(ref(db, `lobbies/${lobby.lobbyId}`), {
+        players: newPlayersList,
+      });
 
     console.log(newPlayersList);
 
