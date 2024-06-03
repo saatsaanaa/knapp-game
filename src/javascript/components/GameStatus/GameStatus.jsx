@@ -39,8 +39,6 @@ const GameStatus = () => {
               </p>
               <p className="Body-2">Выберите карту</p>
             </div>
-
-            <Button disabled={true}>Передать ход</Button>
           </div>
         );
       } else if (lobby.game.status === "true") {
@@ -110,17 +108,17 @@ const GameStatus = () => {
       return (
         <div className="GameStatus">
           <p className="Title-2">
+            {" "}
+            Игрок
+            <span>
+              {" " +
+                lobby.players.filter(
+                  (player) => player.id === lobby.game.currentPlayerId
+                )[0].name}
+            </span>
             {lobby.game.previousStatus == "true"
-              ? "Игрок " +
-                lobby.players.filter(
-                  (player) => player.id === lobby.game.currentPlayerId
-                )[0].name +
-                " ответил на вопрос"
-              : "Игрок " +
-                lobby.players.filter(
-                  (player) => player.id === lobby.game.currentPlayerId
-                )[0].name +
-                " выполнил действие"}
+              ? " ответил на вопрос"
+              : " выполнил действие"}
           </p>
         </div>
       );

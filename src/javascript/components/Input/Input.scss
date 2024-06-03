@@ -1,14 +1,30 @@
 input {
   border-radius: 8px;
-  border: 2px solid #e4e4f6;
+  border: 2px solid #b499ff;
   outline: none;
   padding: 12px;
 
+  &::placeholder {
+    color: #b499ff;
+    transition: all 0.2s;
+  }
+
   font-family: "Manrope", Helvetica, Arial, sans-serif;
   font-size: 16px;
+  font-weight: 500;
+
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: #f3f0ff;
+  }
 
   &:focus {
-    border: 2px solid #6363e6;
+    border: 2px solid #5601d6;
     outline: none;
+
+    &::placeholder {
+      color: #5601d6;
+    }
   }
 }
