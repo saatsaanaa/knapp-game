@@ -132,7 +132,7 @@ export const processAction = (action, actionKey, lobby, user) => {
                   const nextCurrentPair = lobby.game.currentPair[0] + 1;
                   console.log(nextCurrentPair);
 
-                  if (nextCurrentPair < 8) {
+                  if (nextCurrentPair < 4) {
                     getCardPair(
                       lobby.game.pairs[nextCurrentPair][0],
                       lobby.game.pairs[nextCurrentPair][1]
@@ -156,7 +156,7 @@ export const processAction = (action, actionKey, lobby, user) => {
               }
             );
           },
-          30000,
+          3000,
           lobby
         );
       });

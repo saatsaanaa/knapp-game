@@ -55,53 +55,13 @@ body.index {
     align-items: center;
     justify-content: center;
     color: white;
-    min-height: 220vh;
+    min-height: 100vh;
+    height: fit-content;
 
     background: radial-gradient(ellipse at 70% 30%, #11d0a3, transparent 80%),
       #6600ff;
 
-    .content:first-child {
-      height: 120vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-
-      .main {
-        p {
-          text-align: center;
-        }
-      }
-
-      .points {
-        display: flex;
-        height: 50vh;
-
-        p {
-          text-align: center;
-          width: 100%;
-        }
-        p:nth-child(1) {
-          align-self: flex-start;
-        }
-        p:nth-child(2) {
-          align-self: center;
-        }
-        p:nth-child(3) {
-          margin-top: 32px;
-          align-self: flex-end;
-        }
-        p:nth-child(4) {
-          margin-top: 100px;
-          align-self: flex-start;
-        }
-        p:nth-child(5) {
-          margin-top: 100px;
-          align-self: center;
-        }
-      }
-    }
-
-    .content:last-child {
+    .content {
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -116,9 +76,47 @@ body.index {
         gap: 20px;
 
         .decks-list_deck {
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
           width: calc(1240px / 3);
           height: 275.56px;
+          background-color: rgba($color: #11d0a3, $alpha: 0.2);
+          border-radius: 16px;
+          border: 2px solid rgba($color: #11d0a3, $alpha: 0.4);
+          backdrop-filter: blur(40px);
+          padding: 24px 20px;
+
+          .Title-1 {
+            margin-bottom: 24px;
+          }
         }
+      }
+    }
+  }
+
+  .block-2 {
+    min-height: 60vw;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(
+      circle at 50% 100%,
+      transparent 50%,
+      #6600ff 100%
+    );
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+
+      min-height: fit-content;
+      height: fit-content;
+      p {
+        color: #6600ff;
+        text-align: center;
       }
     }
   }
