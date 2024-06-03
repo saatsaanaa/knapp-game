@@ -21,27 +21,18 @@ const Header = () => {
   const decksList = [
     {
       id: 1,
-      name: "Deck #1",
-      description:
-        "Длинное или не очень описание колоды, темы вопросов и действий.",
+      name: "Познакомимся?",
+      description: "Узнать друг друга, не нарушая личных границ",
     },
     {
       id: 2,
-      name: "Deck #2",
-      description:
-        "Длинное или не очень описание колоды, темы вопросов и действий.",
+      name: "Давно знакомы",
+      description: "Проверить, как хорошо тебя знает твой бро.",
     },
     {
       id: 3,
-      name: "Deck #3",
-      description:
-        "Длинное или не очень описание колоды, темы вопросов и действий.",
-    },
-    {
-      id: 4,
-      name: "Deck #4",
-      description:
-        "Длинное или не очень описание колоды, темы вопросов и действий.",
+      name: "Заново завоевать",
+      description: "Разговоры тет-а-тет до утра",
     },
   ];
 
@@ -60,12 +51,6 @@ const Header = () => {
       <a href="/">
         <img src={Logo} alt="" />
       </a>
-
-      <div className="LinkGroup">
-        <a href="/">Колоды</a>
-        <a href="/">Правила игры</a>
-        <a href="/">О проекте</a>
-      </div>
 
       <Button
         onClick={() => {
@@ -175,7 +160,7 @@ export const CreateLobbyModalWindow = ({ decksList, onClose }) => {
         <p className="Title-1">Пригласить игроков</p>
         <p className="Headline">Ссылка-приглашение</p>
         <Button
-          appearance={!linkCopied ? "copy" : "copy success"}
+          appearance={!linkCopied ? "neutral" : "neutral active"}
           onClick={() => {
             navigator.clipboard
               .writeText(

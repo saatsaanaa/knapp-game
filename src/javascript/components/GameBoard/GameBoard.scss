@@ -93,12 +93,24 @@
       top: 50%;
       left: 50%;
       transform: translate(-100%, -50%) rotateZ(-15deg);
+
+      &.choosen {
+        transform: translate(-50%, -50%) rotateZ(0) scale(1.1);
+
+        & + .dare {
+          transform: translate(134%, 50%) rotateZ(15deg);
+        }
+      }
     }
 
     &.dare {
-      top: 50%;
+      bottom: 50%;
       right: 50%;
-      transform: translate(100%, -50%) rotateZ(15deg);
+      transform: translate(100%, 50%) rotateZ(15deg);
+
+      &.choosen {
+        transform: translate(50%, 50%) rotateZ(0) scale(1.1);
+      }
     }
 
     &.for-current-player {
@@ -120,7 +132,7 @@
           z-index: 1;
           background-color: rgba($color: #df5c4a, $alpha: 0.6);
           border: 2px solid rgba($color: #df5c4a, $alpha: 0.8);
-          transform: translate(100%, -50%) rotateZ(10deg) scale(1.1);
+          transform: translate(100%, 50%) rotateZ(10deg) scale(1.1);
         }
       }
 
@@ -128,15 +140,17 @@
         &.truth {
           background-color: rgba($color: #11d0a3, $alpha: 0.6);
           border: 2px solid rgba($color: #11d0a3, $alpha: 0.8);
-
-          /*& + .Card.dare.for-current-player {
+          & + .dare {
             cursor: pointer;
-            transform: translate(25%, -50%) rotateZ(15deg);
+            background-color: rgba($color: #6600ff, $alpha: 0.4);
+            border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
 
             &:hover {
-              
+              transform: translate(150%, 50%) rotateZ(20deg);
+              background-color: rgba($color: #6600ff, $alpha: 0.6);
+              border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
             }
-          }*/
+          }
         }
 
         &.dare {
@@ -150,14 +164,6 @@
       position: absolute;
       z-index: 1;
     }
-
-    &.truth.choosen {
-      transform: translate(-50%, -50%) rotateZ(0) scale(1.1);
-    }
-
-    &.dare.choosen {
-      transform: translate(50%, -50%) rotateZ(0) scale(1.1);
-    }
   }
 
   &:has(.Card.dare.choosen) {
@@ -165,26 +171,6 @@
       background-color: rgba($color: #fff, $alpha: 0.1);
       border: 2px solid rgba($color: #fff, $alpha: 0.2);
       transform: translate(-50%, -50%) rotateZ(-15deg);
-    }
-  }
-
-  &:has(.Card.truth.choosen) {
-    .Card.dare {
-      background-color: rgba($color: #fff, $alpha: 0.1);
-      border: 2px solid rgba($color: #fff, $alpha: 0.2);
-      transform: translate(125%, -50%) rotateZ(15deg);
-    }
-    .Card.dare.for-current-player {
-      cursor: pointer;
-      background-color: rgba($color: #6600ff, $alpha: 0.4);
-      border: 2px solid rgba($color: #6600ff, $alpha: 0.6);
-      transform: translate(125%, -50%) rotateZ(15deg);
-
-      &:hover {
-        transform: translate(150%, -50%) rotateZ(20deg);
-        background-color: rgba($color: #6600ff, $alpha: 0.6);
-        border: 2px solid rgba($color: #6600ff, $alpha: 0.8);
-      }
     }
   }
 
@@ -251,13 +237,15 @@
 
   @media (max-width: 1024px) {
     width: 100%;
-    height: calc(100% - 218px);
+    height: calc(100% - 180px - 76px);
     position: relative;
 
     .Card {
       position: absolute;
-      width: 54vw;
-      height: 81vw;
+      width: 50vw;
+      height: 75vw;
+      max-width: 350px;
+      max-height: 525px;
 
       transition: all 0.4s ease-out;
 
@@ -266,23 +254,22 @@
       }
 
       &.truth {
-        transform: rotateZ(-7deg);
-        top: 40px;
-        left: 20px;
+        top: 0;
+        left: 0;
+        transform: translate(10%, 5%) rotateZ(-7deg);
       }
 
       &.dare {
-        transform: rotateZ(7deg);
-        bottom: 20px;
-        right: 20px;
+        top: unset;
+        bottom: 0;
+        right: 0;
+        transform: translate(-10%, -5%) rotateZ(7deg);
       }
 
       &.for-current-player {
         &.choosen {
           &.truth {
             & + .Card.dare.for-current-player {
-              transform: translateX(0) rotateZ(7deg);
-              bottom: 60px;
               top: auto;
             }
           }
@@ -293,19 +280,27 @@
         top: 60px;
         left: 50%;
         transform: translateX(-50%) scale(1.1);
+
+        & + .dare {
+          top: 50%;
+          left: 50%;
+          transform: translate(-10%, -5%) rotateZ(7deg);
+        }
       }
 
-      &.dare.choosen {
+      &.choosen.dare {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1.1);
       }
     }
 
-    &:has(.dare.choosen) {
-      .truth {
+    &:has(.Card.dare.choosen) {
+      .Card.truth {
         top: 50%;
         left: 50%;
+        bottom: unset;
+        right: unset;
         transform: translate(-50%, -50%) rotateZ(-7deg);
       }
     }

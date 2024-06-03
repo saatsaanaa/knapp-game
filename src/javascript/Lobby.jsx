@@ -72,7 +72,7 @@ const Lobby = () => {
           show: true,
           content: (
             <>
-              <p className="Title-1">Присоединиться к лобби</p>
+              <p className="Title-1">Присоединиться к лобби</p>
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
@@ -93,7 +93,7 @@ const Lobby = () => {
                 <p className="Headline">Придумайте ник</p>
                 <input name="name" size="9" required></input>
 
-                <button className="A_Button" type="submit">
+                <button className="button" type="submit">
                   Присоединиться
                 </button>
               </form>
@@ -127,7 +127,6 @@ const Lobby = () => {
         </div>
         <div className="Menu">
           <div className="logo" />
-          <p className="link">Правила</p>
           <Button
             appearance={"neutral"}
             onClick={() => (document.location.href = "../index.html")}

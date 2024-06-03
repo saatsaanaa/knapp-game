@@ -1,17 +1,10 @@
 .O_Header {
-  display: grid;
+  display: flex;
   /*grid-template-columns: repeat(3, minmax(0, 1fr));*/
   grid-template-columns: 1fr 3fr 1fr;
-  align-items: center;
+  justify-content: space-between;
   width: 1280px;
   padding: 14px 40px;
-
-  > .LinkGroup {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 80px;
-  }
 
   > button {
     justify-self: right;

@@ -71,21 +71,16 @@ const PlayersList = () => {
             <p className="Body-1">
               Он больше не сможет присоединиться к этому лобби
             </p>
-            <div className="button-group">
-              <Button
-                appearance="negative"
-                onClick={() => {
-                  sendAction(
-                    `DELETE_USER_${modalWindow.player.id}`,
-                    lobby,
-                    user
-                  );
-                  setModalWindow({ show: false, player: "" });
-                }}
-              >
-                Выгнать игрока
-              </Button>
-            </div>
+
+            <Button
+              appearance="negative"
+              onClick={() => {
+                sendAction(`DELETE_USER_${modalWindow.player.id}`, lobby, user);
+                setModalWindow({ show: false, player: "" });
+              }}
+            >
+              Выгнать игрока
+            </Button>
           </div>
         </ModalWindow>
       )}

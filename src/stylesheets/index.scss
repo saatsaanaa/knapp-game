@@ -1,14 +1,126 @@
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&display=swap");
+
 body.index {
-  .Cover {
-    width: 1280px;
-    height: calc(100vh - 78px - 24px);
-    background-color: #bfcdff;
-    border-radius: 24px;
-    padding: 24px 56px;
-    display: grid;
-    grid-template-columns: 275fr 1501fr;
-    grid-gap: 32px;
-    gap: 32px;
+  > .Title {
+    font-size: 40px;
+    line-height: 110%;
+    font-family: "Unbounded", sans-serif;
+  }
+
+  .Header {
+    font-family: "Unbounded", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-size: 80px;
+    line-height: 100%;
+
+    color: #6600ff;
+  }
+
+  > div {
+    min-height: 110vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+
+    > .content {
+      width: 1280px;
+      padding: 40px;
+    }
+  }
+
+  .cover {
+    justify-content: flex-start;
+    align-items: center;
+
+    min-height: 100vh;
+
+    background: url("imgs/cover-background.png"),
+      radial-gradient(circle at 30% -50%, transparent 50%, #11d0a3 100% 150%);
+
+    background-position-x: center;
+    background-position-y: bottom;
+    background-size: cover;
+
+    .content {
+      height: 100%;
+
+      .Header {
+        margin-bottom: 40px;
+      }
+    }
+  }
+
+  .block-1 {
+    align-items: center;
+    justify-content: center;
+    color: white;
+    min-height: 220vh;
+
+    background: radial-gradient(ellipse at 70% 30%, #11d0a3, transparent 80%),
+      #6600ff;
+
+    .content:first-child {
+      height: 120vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .main {
+        p {
+          text-align: center;
+        }
+      }
+
+      .points {
+        display: flex;
+        height: 50vh;
+
+        p {
+          text-align: center;
+          width: 100%;
+        }
+        p:nth-child(1) {
+          align-self: flex-start;
+        }
+        p:nth-child(2) {
+          align-self: center;
+        }
+        p:nth-child(3) {
+          margin-top: 32px;
+          align-self: flex-end;
+        }
+        p:nth-child(4) {
+          margin-top: 100px;
+          align-self: flex-start;
+        }
+        p:nth-child(5) {
+          margin-top: 100px;
+          align-self: center;
+        }
+      }
+    }
+
+    .content:last-child {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+
+      .Header {
+        color: white;
+        margin-bottom: 64px;
+      }
+      .decks-list {
+        display: flex;
+        gap: 20px;
+
+        .decks-list_deck {
+          width: calc(1240px / 3);
+          height: 275.56px;
+        }
+      }
+    }
   }
 
   @media (max-width: 1024px) {
@@ -19,9 +131,3 @@ body.index {
     margin-top: 16px;
   }
 }
-
-/*<div>This is a landing page</div>
-    <a href="./pages/lobby.html">Открыть лобби</a>
-    <p>Я что-то</p>
-    <a href="./pages/card-decks.html">Посмотреть колоды</a>
-    <div class="Cover"></div>*/

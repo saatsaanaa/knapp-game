@@ -9,7 +9,7 @@ const Button = ({ onClick, appearance, disabled, type, children }) => {
   return (
     <>
       <button
-        className={`A_Button` + appearance}
+        className={`button` + appearance}
         disabled={disabled}
         onClick={onClick}
         type={type}

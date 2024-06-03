@@ -156,7 +156,7 @@ export const processAction = (action, actionKey, lobby, user) => {
               }
             );
           },
-          3000,
+          30000,
           lobby
         );
       });
@@ -187,7 +187,7 @@ export const processAction = (action, actionKey, lobby, user) => {
 
     //----------Новый curPlayerId----------
     const newCurrentPlayerId = () => {
-      if (newStage() !== "end_no-user") {
+      if (newStage() !== "end_no-user" && lobby.stage === "game") {
         if (
           lobby.game.status === "pick" ||
           lobby.game.status === "true" ||
@@ -208,7 +208,7 @@ export const processAction = (action, actionKey, lobby, user) => {
 
     //----------Новый curPair----------
     const newCurrentPair = () => {
-      if (newStage() !== "end_no-user") {
+      if (newStage() !== "end_no-user" && lobby.stage === "game") {
         if (lobby.game.status === "true" || lobby.game.status === "dare") {
           if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
             const newPair = lobby.game.currentPair[0] + 1;
@@ -228,7 +228,7 @@ export const processAction = (action, actionKey, lobby, user) => {
 
     //----------Новый статус игры----------
     const newGameStatus = () => {
-      if (newStage() !== "end_no-user") {
+      if (newStage() !== "end_no-user" && newStage() === "game") {
         if (lobby.game.status === "true" || lobby.game.status === "dare") {
           if (lobby.game.currentPlayerId === action.actionData.deleteUser) {
             return "pick";
